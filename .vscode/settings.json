@@ -1,0 +1,10 @@
+{
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/work/*/**": true
+    },
+    "[vhdl]": {
+        "editor.tabSize": 2
+    },
+}
