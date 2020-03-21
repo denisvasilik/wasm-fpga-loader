@@ -38,19 +38,20 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
 
   component LoaderBlk_WasmFpgaLoader is
       port (
-          Clk : in std_logic;
-          Rst : in std_logic;
-          Adr : in std_logic_vector(23 downto 0);
-          Sel : in std_logic_vector(3 downto 0);
-          DatIn : in std_logic_vector(31 downto 0);
-          We : in std_logic;
-          Stb : in std_logic;
-          Cyc : in  std_logic_vector(0 downto 0);
-          LoaderBlk_DatOut : out std_logic_vector(31 downto 0);
-          LoaderBlk_Ack : out std_logic;
-          LoaderBlk_Unoccupied_Ack : out std_logic;
-          Run : out std_logic;
-          Busy : in std_logic
+        Clk : in std_logic;
+        Rst : in std_logic;
+        Adr : in std_logic_vector(23 downto 0);
+        Sel : in std_logic_vector(3 downto 0);
+        DatIn : in std_logic_vector(31 downto 0);
+        We : in std_logic;
+        Stb : in std_logic;
+        Cyc : in  std_logic_vector(0 downto 0);
+        LoaderBlk_DatOut : out std_logic_vector(31 downto 0);
+        LoaderBlk_Ack : out std_logic;
+        LoaderBlk_Unoccupied_Ack : out std_logic;
+        Run : out std_logic;
+        Loaded : in std_logic;
+        Busy : in std_logic
       );
   end component LoaderBlk_WasmFpgaLoader;
 
@@ -104,6 +105,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
   signal StartFuncIndex : std_logic_vector(31 downto 0);
 
   signal DecodedValue : std_logic_vector(31 downto 0);
+
+  signal LoadedBuf : std_logic;
 
 	signal LoaderState : unsigned(7 downto 0);
   signal LoaderStateReturn : unsigned(7 downto 0);
@@ -224,6 +227,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
   constant LoaderStateReadRam1 : natural := 251;
   constant LoaderStateReadRam2 : natural := 252;
 
+  constant LoaderStateLoaded : natural := 254;
   constant LoaderStateError : natural := 255;
 
   constant WasmBinaryMagic : std_logic_vector(31 downto 0) := x"6D736100";
@@ -239,7 +243,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
   Memory_We <= '0';
   Memory_DatOut <= (others => '0');
 
-  Loaded <= '0';
+  Loaded <= LoadedBuf;
 
   DecodeModule : process (Clk, Rst)
   begin
@@ -273,6 +277,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       NumGlobals <= (others => '0');
       NumData <= (others => '0');
       NumElements <= (others => '0');
+      LoadedBuf <= '0';
       LoaderState <= (others => '0');
       LoaderStateReturn <= (others => '0');
       LoaderStateReturnU32 <= (others => '0');
@@ -285,8 +290,6 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
           if (Run = '1') then
               Busy <= '1';
               LoaderState <= to_unsigned(LoaderState0, LoaderState'LENGTH);
-          else
-              LoaderState <= to_unsigned(LoaderStateIdle0, LoaderState'LENGTH);
           end if;
       --
       -- WASM magic number
@@ -753,7 +756,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
             LoaderStateReturn <= to_unsigned(LoaderStateSectionData1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           else
-            LoaderState <= to_unsigned(LoaderStateIdle0, LoaderState'LENGTH);
+            LoaderState <= to_unsigned(LoaderStateLoaded, LoaderState'LENGTH);
           end if;
       elsif (LoaderState = LoaderStateSectionData1) then
           -- section size 
@@ -770,7 +773,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
             LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionData4, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateIdle0, LoaderState'LENGTH);
+            LoaderStateReturn <= to_unsigned(LoaderStateLoaded, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           end if;
       elsif (LoaderState = LoaderStateSectionData4) then
@@ -786,6 +789,11 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
           -- data segment size
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
           LoaderState <= to_unsigned(LoaderStateSectionData3, LoaderState'LENGTH);
+      --
+      -- Loaded
+      --
+      elsif (LoaderState = LoaderStateLoaded) then
+        LoadedBuf <= '1';
       --
       -- Read globaltype
       --
@@ -971,6 +979,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
         LoaderBlk_Ack => LoaderBlk_Ack,
         LoaderBlk_Unoccupied_Ack => LoaderBlk_Unoccupied_Ack,
         Run => Run,
+        Loaded => LoadedBuf,
         Busy => Busy
       );
 
