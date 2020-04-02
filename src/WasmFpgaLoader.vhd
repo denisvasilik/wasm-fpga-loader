@@ -2,6 +2,9 @@ library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
 
+library work;
+  use work.WasmFpgaStoreWshBn_Package.all;
+
 entity WasmFpgaLoader is
     port ( 
         Clk : in std_logic;
@@ -55,6 +58,30 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       );
   end component LoaderBlk_WasmFpgaLoader;
 
+  component StoreBlk_WasmFpgaStore is
+      port (
+          Clk : in std_logic;
+          Rst : in std_logic;
+          Adr : in std_logic_vector(23 downto 0);
+          Sel : in std_logic_vector(3 downto 0);
+          DatIn : in std_logic_vector(31 downto 0);
+          We : in std_logic;
+          Stb : in std_logic;
+          Cyc : in  std_logic_vector(0 downto 0);
+          StoreBlk_DatOut : out std_logic_vector(31 downto 0);
+          StoreBlk_Ack : out std_logic;
+          StoreBlk_Unoccupied_Ack : out std_logic;
+          Operation : out std_logic;
+          Run : out std_logic;
+          Busy : in std_logic;
+          ModuleInstanceUID : out std_logic_vector(31 downto 0);
+          SectionUID : out std_logic_vector(31 downto 0);
+          Idx : out std_logic_vector(31 downto 0);
+          Address_ToBeRead : in std_logic_vector(31 downto 0);
+          Address_Written : out std_logic_vector(31 downto 0)
+      );
+  end component;
+
   signal ReadModuleState : unsigned(7 downto 0);
   signal ReadModuleRun : std_logic;
   signal ReadModuleBusy : std_logic;
@@ -73,6 +100,17 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
   signal LoaderBlk_DatOut : std_logic_vector(31 downto 0);
   signal LoaderBlk_Ack : std_logic;
   signal LoaderBlk_Unoccupied_Ack : std_logic;
+
+  signal ModuleInstanceUID : std_logic_vector(31 downto 0);
+  signal SectionUID : std_logic_vector(31 downto 0);
+  signal Idx : std_logic_vector(31 downto 0);
+  signal Address : std_logic_vector(31 downto 0);
+
+  signal StoreRun : std_logic;
+  signal StoreBusy : std_logic
+  signal StoreBlk_DatOut : std_logic_vector(31 downto 0);
+  signal StoreBlk_Ack : std_logic;
+  signal StoreBlk_Unoccupied_Ack : std_logic;
 
   signal Opcode : std_logic_vector(7 downto 0);
   signal ReadBinaryMagic : std_logic_vector(31 downto 0);
@@ -964,6 +1002,29 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       end if;
     end if;
   end process;
+
+  StoreBlk_WasmFpgaStore_i : StoreBlk_WasmFpgaStore
+      port map (
+        Clk => Clk,
+        Rst => Rst,
+        Adr => Store_Adr,
+        Sel => Store_Sel,
+        DatIn => Store_DatIn,
+        We => Store_We,
+        Stb => Store_Stb,
+        Cyc => Store_Cyc,
+        StoreBlk_DatOut => StoreBlk_DatOut,
+        StoreBlk_Ack => StoreBlk_Ack,
+        StoreBlk_Unoccupied_Ack => StoreBlk_Unoccupied_Ack,
+        Operation => WASMFPGASTORE_VAL_Write,
+        Run => StoreRun,
+        Busy => StoreBusy,
+        ModuleInstanceUID => ModuleInstanceUID,
+        SectionUID => SectionUID,
+        Idx => Idx,
+        Address_ToBeRead => Address,
+        Address_Written => open
+      );
 
   LoaderBlk_WasmFpgaLoader_i : LoaderBlk_WasmFpgaLoader
       port map (
