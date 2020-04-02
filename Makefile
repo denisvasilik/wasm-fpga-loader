@@ -36,4 +36,8 @@ hxs:
                -v ${PWD}/hxs_gen:/work/gen \
                registry.build.aug:5000/docker/hxs_generator:latest
 
+fetch-definitions:
+	cp ../wasm-fpga-store/hxs_gen/vhd_gen/header/wasm_fpga_store_header.vhd \
+	resources/wasm_fpga_store_header.vhd
+
 .PHONY: all prepare project package clean hxs
