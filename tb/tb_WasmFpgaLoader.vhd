@@ -56,8 +56,8 @@ architecture behavioural of tb_WasmFpgaLoader is
         port (
             Clk : in std_logic;
             Rst : in std_logic;
-			WasmFpgaLoader_FileIO : in T_WasmFpgaLoader_FileIO;
-			FileIO_WasmFpgaLoader : out T_FileIO_WasmFpgaLoader
+            WasmFpgaLoader_FileIO : in T_WasmFpgaLoader_FileIO;
+            FileIO_WasmFpgaLoader : out T_FileIO_WasmFpgaLoader
         );
     end component;
 
@@ -80,13 +80,22 @@ architecture behavioural of tb_WasmFpgaLoader is
         Memory_DatOut : out std_logic_vector(31 downto 0);
         Memory_DatIn: in std_logic_vector(31 downto 0);
         Memory_Ack : in std_logic;
-        Memory_Cyc : out std_logic_vector(0 downto 0)
+        Memory_Cyc : out std_logic_vector(0 downto 0);
+        Store_Adr : out std_logic_vector(23 downto 0);
+        Store_Sel : out std_logic_vector(3 downto 0);
+        Store_We : out std_logic;
+        Store_Stb : out std_logic;
+        Store_DatOut : out std_logic_vector(31 downto 0);
+        Store_DatIn: in std_logic_vector(31 downto 0);
+        Store_Ack : in std_logic;
+        Store_Cyc : out std_logic_vector(0 downto 0);
+        Loaded : out std_logic
       );
     end component;
 
 begin
 
-	nRst <= not Rst;
+    nRst <= not Rst;
 
     Clk100MGen : process is
     begin
@@ -147,7 +156,16 @@ begin
             Memory_DatOut => ModuleArea_DatIn,
             Memory_DatIn => ModuleArea_DatOut,
             Memory_Ack => ModuleArea_Ack,
-            Memory_Cyc => ModuleArea_Cyc
+            Memory_Cyc => ModuleArea_Cyc,
+            Store_Adr => open,
+            Store_Sel => open,
+            Store_We => open,
+            Store_Stb => open,
+            Store_DatOut => open,
+            Store_DatIn => (others => '0'),
+            Store_Ack => '0',
+            Store_Cyc => open,
+            Loaded => open
        );
 
 end;
