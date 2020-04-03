@@ -59,6 +59,7 @@ begin
       Adr <= (others => '0');
       Sel <= (others => '0');
       We <= '0';
+      DatIn <= (others => '0');
       State <= (others => '0');
     elsif rising_edge(Clk) then
       if( State = Idle ) then
