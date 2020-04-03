@@ -898,7 +898,11 @@ begin
 
             elsif (instruction(1 to len) = "GET_SIG" or instruction(1 to len) = "VERIFY_SIG" ) then
                 if (par1 = 0) then
-
+                    if(WasmFpgaLoader_FileIO.Loaded = '0') then
+                        temp_int := 0;
+                    else
+                        temp_int := 1;
+                    end if;
                 else
                     assert (false)
                     report " Line " & (integer'image(file_line)) & ", " & instruction(1 to len) & ": Signal not defined"

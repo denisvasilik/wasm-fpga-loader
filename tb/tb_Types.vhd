@@ -8,6 +8,7 @@ package tb_Types is
     record
         DatOut : std_logic_vector(31 downto 0);
         Ack : std_logic;
+        Loaded : std_logic;
     end record;
 
     type T_FileIO_WasmFpgaLoader is

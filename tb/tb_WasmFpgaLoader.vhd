@@ -24,17 +24,35 @@ architecture behavioural of tb_WasmFpgaLoader is
     signal WasmFpgaLoader_FileIO : T_WasmFpgaLoader_FileIO;
     signal FileIO_WasmFpgaLoader : T_FileIO_WasmFpgaLoader;
 
-    signal ModuleArea_Adr : std_logic_vector(23 downto 0);
-    signal ModuleArea_Sel : std_logic_vector(3 downto 0);
-    signal ModuleArea_We : std_logic;
-    signal ModuleArea_Stb : std_logic;
-    signal ModuleArea_DatOut : std_logic_vector(31 downto 0);
-    signal ModuleArea_DatIn: std_logic_vector(31 downto 0);
-    signal ModuleArea_Ack : std_logic;
-    signal ModuleArea_Cyc : std_logic_vector(0 downto 0);
+    signal Store_Adr : std_logic_vector(23 downto 0);
+    signal Store_Sel : std_logic_vector(3 downto 0);
+    signal Store_We : std_logic;
+    signal Store_Stb : std_logic;
+    signal Store_DatOut : std_logic_vector(31 downto 0);
+    signal Store_DatIn: std_logic_vector(31 downto 0);
+    signal Store_Ack : std_logic;
+    signal Store_Cyc : std_logic_vector(0 downto 0);
+
+    signal ModuleMemory_Adr : std_logic_vector(23 downto 0);
+    signal ModuleMemory_Sel : std_logic_vector(3 downto 0);
+    signal ModuleMemory_We : std_logic;
+    signal ModuleMemory_Stb : std_logic;
+    signal ModuleMemory_DatOut : std_logic_vector(31 downto 0);
+    signal ModuleMemory_DatIn: std_logic_vector(31 downto 0);
+    signal ModuleMemory_Ack : std_logic;
+    signal ModuleMemory_Cyc : std_logic_vector(0 downto 0);
+
+    signal StoreMemory_Adr : std_logic_vector(23 downto 0);
+    signal StoreMemory_Sel : std_logic_vector(3 downto 0);
+    signal StoreMemory_We : std_logic;
+    signal StoreMemory_Stb : std_logic;
+    signal StoreMemory_DatOut : std_logic_vector(31 downto 0);
+    signal StoreMemory_DatIn: std_logic_vector(31 downto 0);
+    signal StoreMemory_Ack : std_logic;
+    signal StoreMemory_Cyc : std_logic_vector(0 downto 0);
 
     component WbRam is
-        port ( 
+        port (
             Clk : in std_logic;
             nRst : in std_logic;
             Adr : in std_logic_vector(23 downto 0);
@@ -93,6 +111,29 @@ architecture behavioural of tb_WasmFpgaLoader is
       );
     end component;
 
+    component WasmFpgaStore is
+    port (
+        Clk : in std_logic;
+        nRst : in std_logic;
+        Adr : in std_logic_vector(23 downto 0);
+        Sel : in std_logic_vector(3 downto 0);
+        DatIn : in std_logic_vector(31 downto 0);
+        We : in std_logic;
+        Stb : in std_logic;
+        Cyc : in std_logic_vector(0 downto 0);
+        DatOut : out std_logic_vector(31 downto 0);
+        Ack : out std_logic;
+        Memory_Adr : out std_logic_vector(23 downto 0);
+        Memory_Sel : out std_logic_vector(3 downto 0);
+        Memory_We : out std_logic;
+        Memory_Stb : out std_logic;
+        Memory_DatOut : out std_logic_vector(31 downto 0);
+        Memory_DatIn: in std_logic_vector(31 downto 0);
+        Memory_Ack : in std_logic;
+        Memory_Cyc : out std_logic_vector(0 downto 0)
+    );
+    end component;
+
 begin
 
     nRst <= not Rst;
@@ -123,18 +164,32 @@ begin
             FileIO_WasmFpgaLoader => FileIO_WasmFpgaLoader
         );
 
-    WbRam_i : WbRam
+    ModuleMemory_i : WbRam
         port map ( 
             Clk => Clk100M,
             nRst => nRst,
-            Adr => ModuleArea_Adr,
-            Sel => ModuleArea_Sel,
-            DatIn => ModuleArea_DatIn,
-            We => ModuleArea_We,
-            Stb => ModuleArea_Stb,
-            Cyc => ModuleArea_Cyc,
-            DatOut => ModuleArea_DatOut,
-            Ack => ModuleArea_Ack
+            Adr => ModuleMemory_Adr,
+            Sel => ModuleMemory_Sel,
+            DatIn => ModuleMemory_DatIn,
+            We => ModuleMemory_We,
+            Stb => ModuleMemory_Stb,
+            Cyc => ModuleMemory_Cyc,
+            DatOut => ModuleMemory_DatOut,
+            Ack => ModuleMemory_Ack
+        );
+
+    StoreMemory_i : WbRam
+        port map ( 
+            Clk => Clk100M,
+            nRst => nRst,
+            Adr => StoreMemory_Adr,
+            Sel => StoreMemory_Sel,
+            DatIn => StoreMemory_DatIn,
+            We => StoreMemory_We,
+            Stb => StoreMemory_Stb,
+            Cyc => StoreMemory_Cyc,
+            DatOut => StoreMemory_DatOut,
+            Ack => StoreMemory_Ack
         );
 
     WasmFpgaLoader_i : WasmFpgaLoader
@@ -149,23 +204,45 @@ begin
             Cyc => FileIO_WasmFpgaLoader.Cyc,
             DatOut => WasmFpgaLoader_FileIO.DatOut,
             Ack => WasmFpgaLoader_FileIO.Ack,
-            Memory_Adr => ModuleArea_Adr,
-            Memory_Sel => ModuleArea_Sel,
-            Memory_We => ModuleArea_We,
-            Memory_Stb => ModuleArea_Stb,
-            Memory_DatOut => ModuleArea_DatIn,
-            Memory_DatIn => ModuleArea_DatOut,
-            Memory_Ack => ModuleArea_Ack,
-            Memory_Cyc => ModuleArea_Cyc,
-            Store_Adr => open,
-            Store_Sel => open,
-            Store_We => open,
-            Store_Stb => open,
-            Store_DatOut => open,
-            Store_DatIn => (others => '0'),
-            Store_Ack => '0',
-            Store_Cyc => open,
-            Loaded => open
+            Memory_Adr => ModuleMemory_Adr,
+            Memory_Sel => ModuleMemory_Sel,
+            Memory_We => ModuleMemory_We,
+            Memory_Stb => ModuleMemory_Stb,
+            Memory_DatOut => ModuleMemory_DatIn,
+            Memory_DatIn => ModuleMemory_DatOut,
+            Memory_Ack => ModuleMemory_Ack,
+            Memory_Cyc => ModuleMemory_Cyc,
+            Store_Adr => Store_Adr,
+            Store_Sel => Store_Sel,
+            Store_We => Store_We,
+            Store_Stb => Store_Stb,
+            Store_DatOut => Store_DatIn,
+            Store_DatIn => Store_DatOut,
+            Store_Ack => Store_Ack,
+            Store_Cyc => Store_Cyc,
+            Loaded => WasmFpgaLoader_FileIO.Loaded
        );
+
+    WasmFpgaStore_i : WasmFpgaStore
+      port map (
+        Clk => Clk100M,
+        nRst => nRst,
+        Adr => Store_Adr,
+        Sel => Store_Sel,
+        DatIn => Store_DatIn,
+        We => Store_We,
+        Stb => Store_Stb,
+        Cyc => Store_Cyc,
+        DatOut => Store_DatOut,
+        Ack => Store_Ack,
+        Memory_Adr => StoreMemory_Adr,
+        Memory_Sel => StoreMemory_Sel,
+        Memory_We => StoreMemory_We,
+        Memory_Stb => StoreMemory_Stb,
+        Memory_DatOut => StoreMemory_DatIn,
+        Memory_DatIn => StoreMemory_DatOut,
+        Memory_Ack => StoreMemory_Ack,
+        Memory_Cyc => StoreMemory_Cyc
+      );
 
 end;
