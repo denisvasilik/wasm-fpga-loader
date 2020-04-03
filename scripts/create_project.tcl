@@ -43,7 +43,7 @@ printMessage "Set IP repository paths"
 
 set obj [get_filesets sources_1]
 
-set_property "ip_repo_paths" "[file normalize "${project_origin}/vivado-bus-abstraction-wb-ip"]" $obj
+set_property "ip_repo_paths" "[file normalize "project_origin/vivado-bus-abstraction-wb-ip"]" $obj
 
 # Rebuild user ip_repo's index before adding any source files
 update_ip_catalog -rebuild
@@ -100,6 +100,7 @@ set files [list \
  "[file normalize "${project_tb}/tb_std_logic_1164_additions.vhd"]"\
  "[file normalize "${project_tb}/tb_Types.vhd"]"\
  "[file normalize "${project_tb}/tb_WbRam.vhd"]"\
+ "[file normalize "${project_origin}/wasm-fpga-store/src/WasmFpgaStore.vhd"]"\
 ]
 add_files -norecurse -fileset $obj $files
 
