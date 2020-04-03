@@ -10,10 +10,10 @@ convert:
 prepare:
 	@mkdir -p work
 
-project: prepare hxs
+project: prepare hxs fetch-definitions
 	@vivado -mode batch -source scripts/create_project.tcl -notrace -nojournal -tempDir work -log work/vivado.log
 
-package: prepare hxs
+package: prepare hxs fetch-definitions
 	@vivado -mode batch -source scripts/package_ip.tcl -notrace -nojournal -tempDir work -log work/vivado.log
 
 clean:
@@ -37,7 +37,7 @@ hxs:
                registry.build.aug:5000/docker/hxs_generator:latest
 
 fetch-definitions:
-	cp ../wasm-fpga-store/hxs_gen/vhd_gen/header/wasm_fpga_store_header.vhd \
-	resources/wasm_fpga_store_header.vhd
+	cp ../wasm-fpga-store/hxs_gen/vhd_gen/header/* resources
+	cp ../wasm-fpga-store/hxs_gen/vhd_gen/wishbone/* resources
 
-.PHONY: all prepare project package clean hxs
+.PHONY: all prepare project package clean hxs fetch-definitions
