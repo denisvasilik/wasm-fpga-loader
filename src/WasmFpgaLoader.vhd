@@ -238,6 +238,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
 	constant LoaderStateSectionCode2 : natural := 132;
 	constant LoaderStateSectionCode3 : natural := 133;
 	constant LoaderStateSectionCode4 : natural := 134;
+	constant LoaderStateSectionCode5 : natural := 135;
+	constant LoaderStateSectionCode6 : natural := 136;
 
 	constant LoaderStateSectionData0 : natural := 140;
 	constant LoaderStateSectionData1 : natural := 141;
@@ -793,33 +795,43 @@ begin
       elsif (LoaderState = LoaderStateSectionCode0) then
           if (ReadData = SECTION_UID_CODE(7 downto 0)) then
             SectionUID <= SECTION_UID_CODE;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            Idx <= (others => '0');
+            Address <= x"00" & ReadAddress;
+            LoaderStateReturn <= to_unsigned(LoaderStateSectionCode1, LoaderState'LENGTH);
+            LoaderState <= to_unsigned(LoaderStateWriteStore0, LoaderState'LENGTH);
           else
             LoaderState <= to_unsigned(LoaderStateSectionData0, LoaderState'LENGTH);
           end if;
       elsif (LoaderState = LoaderStateSectionCode1) then
-          -- section size 
-          NumFunctionsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode2, LoaderState'LENGTH);
+            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
       elsif (LoaderState = LoaderStateSectionCode2) then
-          NumFunctions <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionCode3, LoaderState'LENGTH);
+          -- section size
+          NumFunctionsIteration <= (others => '0');
+          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode3, LoaderState'LENGTH);
+          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
       elsif (LoaderState = LoaderStateSectionCode3) then
+          NumFunctions <= DecodedValue;
+          LoaderState <= to_unsigned(LoaderStateSectionCode4, LoaderState'LENGTH);
+      elsif (LoaderState = LoaderStateSectionCode4) then
           -- num functions
           if (NumFunctionsIteration /= unsigned(NumFunctions)) then
             NumFunctionsIteration <= NumFunctionsIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            Idx <= std_logic_vector(NumFunctionsIteration);
+            Address <= x"00" & ReadAddress;
+            LoaderStateReturn <= to_unsigned(LoaderStateSectionCode5, LoaderState'LENGTH);
+            LoaderState <= to_unsigned(LoaderStateWriteStore0, LoaderState'LENGTH);
           else
             LoaderStateReturn <= to_unsigned(LoaderStateSectionData0, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           end if;
-      elsif (LoaderState = LoaderStateSectionCode4) then
+      elsif (LoaderState = LoaderStateSectionCode5) then
+            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode6, LoaderState'LENGTH);
+            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+      elsif (LoaderState = LoaderStateSectionCode6) then
           -- func body size
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
-          LoaderState <= to_unsigned(LoaderStateSectionCode3, LoaderState'LENGTH);
+          LoaderState <= to_unsigned(LoaderStateSectionCode4, LoaderState'LENGTH);
       --
       -- Section "Data" (11)
       --
