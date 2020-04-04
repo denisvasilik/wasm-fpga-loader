@@ -224,6 +224,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
 	constant LoaderStateSectionStart0 : natural := 110;
 	constant LoaderStateSectionStart1 : natural := 111;
 	constant LoaderStateSectionStart2 : natural := 112;
+	constant LoaderStateSectionStart3 : natural := 113;
 
 	constant LoaderStateSectionElement0 : natural := 120;
 	constant LoaderStateSectionElement1 : natural := 121;
@@ -258,6 +259,10 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
 	constant LoaderStateReadU32_4 : natural := 164;
 	constant LoaderStateReadU32_5 : natural := 165;
 
+  constant LoaderStateWriteStore0 : natural := 170;
+  constant LoaderStateWriteStore1 : natural := 171;
+  constant LoaderStateWriteStore2 : natural := 172;
+
   constant LoaderStateReadRam0 : natural := 250;
   constant LoaderStateReadRam1 : natural := 251;
   constant LoaderStateReadRam2 : natural := 252;
@@ -268,7 +273,19 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
   constant WasmBinaryMagic : std_logic_vector(31 downto 0) := x"6D736100";
   constant WasmBinaryVersion : std_logic_vector(31 downto 0) := x"00000001";
 
- begin
+  constant SECTION_UID_TYPE : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"01";
+  constant SECTION_UID_IMPORT : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"02";
+  constant SECTION_UID_FUNCTION : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"03";
+  constant SECTION_UID_TABLE : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"04";
+  constant SECTION_UID_MEMORY : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"05";
+  constant SECTION_UID_GLOBAL : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"06";
+  constant SECTION_UID_EXPORT : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"07";
+  constant SECTION_UID_START : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"08";
+  constant SECTION_UID_ELEMENT : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"09";
+  constant SECTION_UID_CODE : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"0A";
+  constant SECTION_UID_DATA : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"0B";
+
+begin
 
   Rst <= not nRst;
 
@@ -316,6 +333,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       SectionUID <= (others => '0');
       Idx <= (others => '0');
       Address <= (others => '0');
+      StoreRun <= '0';
       LoadedBuf <= '0';
       LoaderState <= (others => '0');
       LoaderStateReturn <= (others => '0');
@@ -390,7 +408,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Type" (1)
       --
       elsif (LoaderState = LoaderStateSectionType0) then
-        if (ReadData = x"01") then
+        if (ReadData = SECTION_UID_TYPE(7 downto 0)) then
+          SectionUID <= SECTION_UID_TYPE;
           LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionType1, LoaderState'LENGTH);
           LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
         else 
@@ -458,7 +477,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Import" (2)
       --
       elsif (LoaderState = LoaderStateSectionImport0) then
-          if (ReadData = x"02") then
+          if (ReadData = SECTION_UID_IMPORT(7 downto 0)) then
+            SectionUID <= SECTION_UID_IMPORT;
             LoaderStateReturn <= to_unsigned(LoaderStateSectionImport1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           else
@@ -532,7 +552,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Function" (3)
       --
       elsif (LoaderState = LoaderStateSectionFunction0) then
-          if (ReadData = x"03") then
+          if (ReadData = SECTION_UID_FUNCTION(7 downto 0)) then
+            SectionUID <= SECTION_UID_FUNCTION;
             LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionFunction1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
           else
@@ -563,7 +584,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Table" (4)
       --
       elsif (LoaderState = LoaderStateSectionTable0) then
-          if (ReadData = x"04") then
+          if (ReadData = SECTION_UID_TABLE(7 downto 0)) then
+            SectionUID <= SECTION_UID_TABLE;
             LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionTable1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
           else
@@ -592,7 +614,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Memory" (5)
       --
       elsif (LoaderState = LoaderStateSectionMemory0) then
-          if (ReadData = x"05") then
+          if (ReadData = SECTION_UID_MEMORY(7 downto 0)) then
+            SectionUID <= SECTION_UID_MEMORY;
             LoaderStateReturn <= to_unsigned(LoaderStateSectionMemory1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           else
@@ -621,7 +644,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Global" (6)
       --
       elsif (LoaderState = LoaderStateSectionGlobal0) then
-          if (ReadData = x"06") then
+          if (ReadData = SECTION_UID_GLOBAL(7 downto 0)) then
+            SectionUID <= SECTION_UID_GLOBAL;
             LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionGlobal1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
           else
@@ -650,7 +674,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Export" (7)
       --
       elsif (LoaderState = LoaderStateSectionExport0) then
-          if (ReadData = x"07") then
+          if (ReadData = SECTION_UID_EXPORT(7 downto 0)) then
+            SectionUID <= SECTION_UID_EXPORT;
             LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionExport1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
           else
@@ -690,18 +715,24 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Start" (8)
       --
       elsif (LoaderState = LoaderStateSectionStart0) then
-          if (ReadData = x"08") then
+          if (ReadData = SECTION_UID_START(7 downto 0)) then
+            SectionUID <= SECTION_UID_START;
+            Idx <= (others => '0');
+            Address <= x"00" & ReadAddress;
             LoaderStateReturn <= to_unsigned(LoaderStateSectionStart1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderState <= to_unsigned(LoaderStateWriteStore0, LoaderState'LENGTH);
           else
             LoaderState <= to_unsigned(LoaderStateSectionElement0, LoaderState'LENGTH);
           end if;
       elsif (LoaderState = LoaderStateSectionStart1) then
+        LoaderStateReturn <= to_unsigned(LoaderStateSectionStart2, LoaderState'LENGTH);
+        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+      elsif (LoaderState = LoaderStateSectionStart2) then
           -- section size
           NumExportsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionStart2, LoaderState'LENGTH);
+          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionStart3, LoaderState'LENGTH);
           LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionStart2) then
+      elsif (LoaderState = LoaderStateSectionStart3) then
           StartFuncIndex <= DecodedValue;
           LoaderStateReturn <= to_unsigned(LoaderStateSectionElement0, LoaderState'LENGTH);
           LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
@@ -709,7 +740,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Element" (9)
       --
       elsif (LoaderState = LoaderStateSectionElement0) then
-          if (ReadData = x"09") then
+          if (ReadData = SECTION_UID_ELEMENT(7 downto 0)) then
+            SectionUID <= SECTION_UID_ELEMENT;
             LoaderStateReturn <= to_unsigned(LoaderStateSectionElement1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           else
@@ -759,7 +791,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Code" (10)
       --
       elsif (LoaderState = LoaderStateSectionCode0) then
-          if (ReadData = x"0A") then
+          if (ReadData = SECTION_UID_CODE(7 downto 0)) then
+            SectionUID <= SECTION_UID_CODE;
             LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
           else
@@ -791,7 +824,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
       -- Section "Data" (11)
       --
       elsif (LoaderState = LoaderStateSectionData0) then
-          if (ReadData = x"0B") then
+          if (ReadData = SECTION_UID_DATA(7 downto 0)) then
+            SectionUID <= SECTION_UID_DATA;
             LoaderStateReturn <= to_unsigned(LoaderStateSectionData1, LoaderState'LENGTH);
             LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
           else
@@ -957,6 +991,19 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
             LoaderState <= LoaderStateReturn;
         end if;
       --
+      -- Write to Store
+      --
+      elsif (LoaderState = LoaderStateWriteStore0) then
+        StoreRun <= '1';
+        LoaderState <= to_unsigned(LoaderStateWriteStore1, LoaderState'LENGTH);
+      elsif (LoaderState = LoaderStateWriteStore1) then
+        LoaderState <= to_unsigned(LoaderStateWriteStore2, LoaderState'LENGTH);
+      elsif (LoaderState = LoaderStateWriteStore2) then
+        StoreRun <= '0';
+        if(StoreBusy = '0') then
+          LoaderState <= LoaderStateReturn;
+        end if;
+      --
       -- Trap
       --
       elsif (LoaderState = LoaderStateError) then
@@ -1014,7 +1061,7 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
         We => Store_We,
         Stb => Store_Stb,
         Cyc => Store_Cyc,
-        StoreBlk_DatOut => (others => '0'),
+        StoreBlk_DatOut => Store_DatIn,
         StoreBlk_Ack => Store_Ack,
         StoreBlk_Unoccupied_Ack => '0',
         Operation => WASMFPGASTORE_VAL_Write,
@@ -1023,8 +1070,8 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
         ModuleInstanceUID => ModuleInstanceUID,
         SectionUID => SectionUID,
         Idx => Idx,
-        Address_ToBeRead => Address,
-        Address_Written => (others => '0')
+        Address_ToBeRead => open,
+        Address_Written => Address
       );
 
   LoaderBlk_WasmFpgaLoader_i : LoaderBlk_WasmFpgaLoader

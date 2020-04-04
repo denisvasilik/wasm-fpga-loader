@@ -32,11 +32,16 @@ end entity;
 
 architecture Behavioural of WasmFpgaLoader_StoreBlk is
 
+  signal Ack : std_logic;
+  signal DatOut : std_logic_vector(31 downto 0);
   signal State : std_logic_vector(3 downto 0);
 
 begin
 
   Address_ToBeRead <= (others => '0');
+
+  Ack <= StoreBlk_Ack;
+  DatOut <= StoreBlk_DatOut;
 
   ReadModule : process (Clk, Rst) is
     constant Idle : std_logic_vector(3 downto 0) := x"0";
@@ -51,6 +56,8 @@ begin
     constant WriteControlReg1 : std_logic_vector(3 downto 0) := x"9";
     constant WriteControlReg2 : std_logic_vector(3 downto 0) := x"A";
     constant WriteControlReg3 : std_logic_vector(3 downto 0) := x"B";
+    constant ReadStatusReg0 : std_logic_vector(3 downto 0) := x"C";
+    constant ReadStatusReg1 : std_logic_vector(3 downto 0) := x"D";
   begin
     if (Rst = '1') then
       Busy <= '0';
@@ -153,8 +160,8 @@ begin
           Sel <= (others => '1');
           We <= '1';
           Adr <= WASMFPGASTORE_ADR_ControlReg;
-          DatIn <= (31 downto 2 => '0') & 
-                   WASMFPGASTORE_VAL_Write & 
+          DatIn <= (31 downto 2 => '0') &
+                   WASMFPGASTORE_VAL_Write &
                    WASMFPGASTORE_VAL_DoNotRun;
           State <= WriteControlReg3;
       elsif( State = WriteControlReg3 ) then
@@ -162,7 +169,24 @@ begin
           Cyc <= "0";
           Stb <= '0';
           We <= '0';
-          State <= Idle;
+          State <= ReadStatusReg0;
+        end if;
+      elsif( State = ReadStatusReg0 ) then
+          Cyc <= "1";
+          Stb <= '1';
+          Sel <= (others => '1');
+          We <= '0';
+          Adr <= WASMFPGASTORE_ADR_StatusReg;
+          State <= ReadStatusReg1;
+      elsif( State = ReadStatusReg1 ) then
+        if ( Ack = '1' ) then
+          Cyc <= "0";
+          Stb <= '0';
+          if (DatOut(0) = WASMFPGASTORE_VAL_IsNotBusy) then
+            State <= Idle;
+          else
+            State <= ReadStatusReg0;
+          end if;
         end if;
       end if;
     end if;
