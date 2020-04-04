@@ -867,6 +867,7 @@ begin
       --
       elsif (LoaderState = LoaderStateLoaded) then
         LoadedBuf <= '1';
+        LoaderState <= to_unsigned(LoaderStateIdle0, LoaderState'LENGTH);
       --
       -- Read globaltype
       --
