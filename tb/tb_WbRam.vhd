@@ -37,42 +37,67 @@ architecture WbRamArchitecture of WbRam is
   end component;
 
   signal Rst : std_logic;
-  signal ReadEnable : std_logic;
+  signal Enable : std_logic;
+  signal WriteEnable : std_logic_vector(0 downto 0);
   signal ReadData : std_logic_vector(31 downto 0);
-  signal ReadAddress : std_logic_vector(9 downto 0);
-  signal ReadState : unsigned(1 downto 0);
+  signal WriteData : std_logic_vector(31 downto 0);
+  signal Address : std_logic_vector(9 downto 0);
+  signal WbState : unsigned(7 downto 0);
 
-  constant ReadStateIdle0 : natural := 0;
-  constant ReadStateRead0 : natural := 1;
-  constant ReadStateRead1 : natural := 2;
+  constant WbStateIdle0 : natural := 0;
+  constant WbStateRead0 : natural := 1;
+  constant WbStateRead1 : natural := 2;
+  constant WbStateRead2 : natural := 3;
+  constant WbStateRead3 : natural := 4;
+  constant WbStateWrite0 : natural := 5;
+  constant WbStateWrite1 : natural := 6;
 
- begin
+begin
 
   Rst <= not nRst;
 
-  process (Clk, Rst) is
+  MemoryAccess : process (Clk, Rst) is
   begin
     if (Rst = '1') then
       Ack <= '0';
       DatOut <= (others => '0');
-      ReadEnable <= '0';
-      ReadAddress <= (others => '0');
-      ReadState <= (others => '0');
+      Enable <= '0';
+      WriteEnable <= "0";
+      Address <= (others => '0');
+      WbState <= (others => '0');
     elsif rising_edge(Clk) then
-      if(ReadState = ReadStateIdle0) then
+      if(WbState = WbStateIdle0) then
         Ack <= '0';
-        ReadEnable <= '0';
+        Enable <= '0';
         if (Cyc = "1" and We = '0') then
-            ReadEnable <= '1';
-            ReadAddress <= Adr(9 downto 0);
-            ReadState <= to_unsigned(ReadStateRead0, ReadState'LENGTH);
+            Enable <= '1';
+            Address <= Adr(9 downto 0);
+            WbState <= to_unsigned(WbStateRead0, WbState'LENGTH);
+        elsif (Cyc = "1" and We = '1') then
+            Enable <= '1';
+            WriteEnable <= "1";
+            WriteData <= DatIn;
+            Address <= Adr(9 downto 0);
+            WbState <= to_unsigned(WbStateWrite0, WbState'LENGTH);
         end if;
-      elsif(ReadState = ReadStateRead0) then
-        ReadState <= to_unsigned(ReadStateRead1, ReadState'LENGTH);
-      elsif(ReadState = ReadStateRead1) then
+      elsif(WbState = WbStateRead0) then
+        WbState <= to_unsigned(WbStateRead1, WbState'LENGTH);
+      elsif(WbState = WbStateRead1) then
+        WbState <= to_unsigned(WbStateRead2, WbState'LENGTH);
+      elsif(WbState = WbStateRead2) then
         DatOut <= ReadData;
         Ack <= '1';
-        ReadState <= to_unsigned(ReadStateIdle0, ReadState'LENGTH);
+        WbState <= to_unsigned(WbStateRead3, WbState'LENGTH);
+      elsif(WbState = WbStateRead3) then
+        Ack <= '0';
+        WbState <= to_unsigned(WbStateIdle0, WbState'LENGTH);
+      elsif(WbState = WbStateWrite0) then
+        WriteEnable <= "0";
+        Ack <= '1';
+        WbState <= to_unsigned(WbStateWrite1, WbState'LENGTH);
+      elsif(WbState = WbStateWrite1) then
+        Ack <= '0';
+        WbState <= to_unsigned(WbStateIdle0, WbState'LENGTH);
       end if;
     end if;
   end process;
@@ -80,10 +105,10 @@ architecture WbRamArchitecture of WbRam is
   WasmFpgaTestBenchRam_i : WasmFpgaTestBenchRam
     port map ( 
       clka => Clk,
-      ena => ReadEnable,
-      wea => "0",
-      addra => ReadAddress,
-      dina => (others => '0'),
+      ena => Enable,
+      wea => WriteEnable,
+      addra => Address,
+      dina => WriteData,
       douta => ReadData,
       clkb => Clk,
       enb => '0',
