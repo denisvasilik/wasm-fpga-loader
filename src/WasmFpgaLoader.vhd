@@ -150,142 +150,20 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
   signal LoaderStateReturnTableType : unsigned(7 downto 0);
   signal LoaderStateReturnGlobalType : unsigned(7 downto 0);
 
-  constant LoaderStateIdle0 : natural := 0;
-	constant LoaderState0 : natural := 1;
-	constant LoaderState1 : natural := 2;
-	constant LoaderState2 : natural := 3;
-	constant LoaderState3 : natural := 4;
-	constant LoaderState4 : natural := 5;
-	constant LoaderState5 : natural := 6;
-	constant LoaderState6 : natural := 7;
-	constant LoaderState7 : natural := 8;
-	constant LoaderState8 : natural := 10;
-	constant LoaderState9 : natural := 11;
-	constant LoaderState10 : natural := 12;
-	constant LoaderState11 : natural := 13;
-	constant LoaderState12 : natural := 14;
-	constant LoaderState13 : natural := 15;
-
-  constant LoaderStateSectionType0 : natural := 20;
-  constant LoaderStateSectionType1 : natural := 21;
-  constant LoaderStateSectionType2 : natural := 22;
-  constant LoaderStateSectionType3 : natural := 23;
-  constant LoaderStateSectionType4 : natural := 24;
-
-	constant LoaderStateParseFuncType0 : natural := 30;
-	constant LoaderStateParseFuncType1 : natural := 31;
-	constant LoaderStateParseFuncType2 : natural := 32;
-	constant LoaderStateParseFuncType3 : natural := 33;
-
-	constant LoaderStateSectionImport0 : natural := 40;
-	constant LoaderStateSectionImport1 : natural := 41;
-	constant LoaderStateSectionImport2 : natural := 42;
-	constant LoaderStateSectionImport3 : natural := 43;
-	constant LoaderStateSectionImport4 : natural := 44;
-	constant LoaderStateSectionImport5 : natural := 45;
-	constant LoaderStateSectionImport6 : natural := 46;
-	constant LoaderStateSectionImportFuncType0 : natural := 47;
-  constant LoaderStateSectionImportMemType0 : natural := 54;
-
-  constant LoaderStateGlobalType0 : natural := 55;
-  constant LoaderStateGlobalType1 : natural := 56;
-  constant LoaderStateGlobalType2 : natural := 57;
-  constant LoaderStateGlobalType3 : natural := 58;
-
-	constant LoaderStateSectionFunction0 : natural := 60;
-	constant LoaderStateSectionFunction1 : natural := 61;
-  constant LoaderStateSectionFunction2 : natural := 62;
-  constant LoaderStateSectionFunction3 : natural := 63;
-  constant LoaderStateSectionFunction4 : natural := 64;
-
-	constant LoaderStateSectionTable0 : natural := 70;
-	constant LoaderStateSectionTable1 : natural := 71;
-  constant LoaderStateSectionTable2 : natural := 72;
-  constant LoaderStateSectionTable3 : natural := 73;
-
-	constant LoaderStateSectionMemory0 : natural := 80;
-	constant LoaderStateSectionMemory1 : natural := 81;
-	constant LoaderStateSectionMemory2 : natural := 82;
-	constant LoaderStateSectionMemory3 : natural := 83;
-
-	constant LoaderStateSectionGlobal0 : natural := 90;
-	constant LoaderStateSectionGlobal1 : natural := 91;
-	constant LoaderStateSectionGlobal2 : natural := 92;
-	constant LoaderStateSectionGlobal3 : natural := 93;
-
-	constant LoaderStateSectionExport0 : natural := 100;
-	constant LoaderStateSectionExport1 : natural := 101;
-	constant LoaderStateSectionExport2 : natural := 102;
-	constant LoaderStateSectionExport3 : natural := 103;
-	constant LoaderStateSectionExport4 : natural := 104;
-	constant LoaderStateSectionExport5 : natural := 105;
-	constant LoaderStateSectionExport6 : natural := 106;
-
-	constant LoaderStateSectionStart0 : natural := 110;
-	constant LoaderStateSectionStart1 : natural := 111;
-	constant LoaderStateSectionStart2 : natural := 112;
-	constant LoaderStateSectionStart3 : natural := 113;
-
-	constant LoaderStateSectionElement0 : natural := 120;
-	constant LoaderStateSectionElement1 : natural := 121;
-	constant LoaderStateSectionElement2 : natural := 122;
-	constant LoaderStateSectionElement3 : natural := 123;
-	constant LoaderStateSectionElement4 : natural := 124;
-	constant LoaderStateSectionElement5 : natural := 125;
-
-	constant LoaderStateSectionCode0 : natural := 130;
-	constant LoaderStateSectionCode1 : natural := 131;
-	constant LoaderStateSectionCode2 : natural := 132;
-	constant LoaderStateSectionCode3 : natural := 133;
-	constant LoaderStateSectionCode4 : natural := 134;
-	constant LoaderStateSectionCode5 : natural := 135;
-	constant LoaderStateSectionCode6 : natural := 136;
-
-	constant LoaderStateSectionData0 : natural := 140;
-	constant LoaderStateSectionData1 : natural := 141;
-	constant LoaderStateSectionData2 : natural := 142;
-	constant LoaderStateSectionData3 : natural := 143;
-	constant LoaderStateSectionData4 : natural := 144;
-	constant LoaderStateSectionData5 : natural := 145;
-
-	constant LoaderStateLimits0 : natural := 150;
-	constant LoaderStateLimits1 : natural := 151;
-	constant LoaderStateLimits2 : natural := 152;
-	constant LoaderStateLimits3 : natural := 153;
-  constant LoaderStateTableType0 : natural := 154;
-
-	constant LoaderStateReadU32_0 : natural := 160;
-	constant LoaderStateReadU32_1 : natural := 161;
-	constant LoaderStateReadU32_2 : natural := 162;
-	constant LoaderStateReadU32_3 : natural := 163;
-	constant LoaderStateReadU32_4 : natural := 164;
-	constant LoaderStateReadU32_5 : natural := 165;
-
-  constant LoaderStateWriteStore0 : natural := 170;
-  constant LoaderStateWriteStore1 : natural := 171;
-  constant LoaderStateWriteStore2 : natural := 172;
-
-  constant LoaderStateReadRam0 : natural := 250;
-  constant LoaderStateReadRam1 : natural := 251;
-  constant LoaderStateReadRam2 : natural := 252;
-
-  constant LoaderStateLoaded : natural := 254;
-  constant LoaderStateError : natural := 255;
-
   constant WasmBinaryMagic : std_logic_vector(31 downto 0) := x"6D736100";
   constant WasmBinaryVersion : std_logic_vector(31 downto 0) := x"00000001";
 
-  constant SECTION_UID_TYPE : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"01";
-  constant SECTION_UID_IMPORT : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"02";
-  constant SECTION_UID_FUNCTION : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"03";
-  constant SECTION_UID_TABLE : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"04";
-  constant SECTION_UID_MEMORY : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"05";
-  constant SECTION_UID_GLOBAL : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"06";
-  constant SECTION_UID_EXPORT : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"07";
-  constant SECTION_UID_START : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"08";
-  constant SECTION_UID_ELEMENT : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"09";
-  constant SECTION_UID_CODE : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"0A";
-  constant SECTION_UID_DATA : std_logic_vector(31 downto 0) := (31 downto 8 => '0') & x"0B";
+  constant SECTION_UID_TYPE : std_logic_vector(31 downto 0) := x"00000001";
+  constant SECTION_UID_IMPORT : std_logic_vector(31 downto 0) := x"00000002";
+  constant SECTION_UID_FUNCTION : std_logic_vector(31 downto 0) := x"00000003";
+  constant SECTION_UID_TABLE : std_logic_vector(31 downto 0) := x"00000004";
+  constant SECTION_UID_MEMORY : std_logic_vector(31 downto 0) := x"00000005";
+  constant SECTION_UID_GLOBAL : std_logic_vector(31 downto 0) := x"00000006";
+  constant SECTION_UID_EXPORT : std_logic_vector(31 downto 0) := x"00000007";
+  constant SECTION_UID_START : std_logic_vector(31 downto 0) := x"00000008";
+  constant SECTION_UID_ELEMENT : std_logic_vector(31 downto 0) := x"00000009";
+  constant SECTION_UID_CODE : std_logic_vector(31 downto 0) := x"0000000A";
+  constant SECTION_UID_DATA : std_logic_vector(31 downto 0) := x"0000000B";
 
 begin
 
@@ -300,6 +178,109 @@ begin
   Loaded <= LoadedBuf;
 
   DecodeModule : process (Clk, Rst)
+    constant StateIdle0 : std_logic_vector(7 downto 0) := x"00";
+    constant StateMagicNumber0 : std_logic_vector(7 downto 0) := x"01";
+    constant StateMagicNumber1 : std_logic_vector(7 downto 0) := x"02";
+    constant StateMagicNumber2 : std_logic_vector(7 downto 0) := x"03";
+    constant StateMagicNumber3 : std_logic_vector(7 downto 0) := x"04";
+    constant StateMagicNumber4 : std_logic_vector(7 downto 0) := x"05";
+    constant StateMagicNumber5 : std_logic_vector(7 downto 0) := x"06";
+    constant StateBinaryVersion6 : std_logic_vector(7 downto 0) := x"07";
+    constant StateBinaryVersion7 : std_logic_vector(7 downto 0) := x"08";
+    constant StateBinaryVersion8 : std_logic_vector(7 downto 0) := x"09";
+    constant StateBinaryVersion9 : std_logic_vector(7 downto 0) := x"0A";
+    constant StateBinaryVersion10 : std_logic_vector(7 downto 0) := x"0B";
+    constant StateBinaryVersion11 : std_logic_vector(7 downto 0) := x"0C";
+    constant StateBinaryVersion12 : std_logic_vector(7 downto 0) := x"0D";
+    constant StateBinaryVersion13 : std_logic_vector(7 downto 0) := x"0E";
+    constant StateSectionType0 : std_logic_vector(7 downto 0) := x"0F";
+    constant StateSectionType1 : std_logic_vector(7 downto 0) := x"10";
+    constant StateSectionType2 : std_logic_vector(7 downto 0) := x"11";
+    constant StateSectionType3 : std_logic_vector(7 downto 0) := x"12";
+    constant StateSectionType4 : std_logic_vector(7 downto 0) := x"13";
+    constant StateParseFuncType0 : std_logic_vector(7 downto 0) := x"14";
+    constant StateParseFuncType1 : std_logic_vector(7 downto 0) := x"15";
+    constant StateParseFuncType2 : std_logic_vector(7 downto 0) := x"16";
+    constant StateParseFuncType3 : std_logic_vector(7 downto 0) := x"17";
+    constant StateSectionImport0 : std_logic_vector(7 downto 0) := x"18";
+    constant StateSectionImport1 : std_logic_vector(7 downto 0) := x"19";
+    constant StateSectionImport2 : std_logic_vector(7 downto 0) := x"20";
+    constant StateSectionImport3 : std_logic_vector(7 downto 0) := x"21";
+    constant StateSectionImport4 : std_logic_vector(7 downto 0) := x"22";
+    constant StateSectionImport5 : std_logic_vector(7 downto 0) := x"23";
+    constant StateSectionImport6 : std_logic_vector(7 downto 0) := x"24";
+    constant StateSectionImportFuncType0 : std_logic_vector(7 downto 0) := x"25";
+    constant StateSectionImportMemType0 : std_logic_vector(7 downto 0) := x"26";
+    constant StateGlobalType0 : std_logic_vector(7 downto 0) := x"27";
+    constant StateGlobalType1 : std_logic_vector(7 downto 0) := x"28";
+    constant StateGlobalType2 : std_logic_vector(7 downto 0) := x"29";
+    constant StateGlobalType3 : std_logic_vector(7 downto 0) := x"2A";
+    constant StateSectionFunction0 : std_logic_vector(7 downto 0) := x"2B";
+    constant StateSectionFunction1 : std_logic_vector(7 downto 0) := x"2C";
+    constant StateSectionFunction2 : std_logic_vector(7 downto 0) := x"2D";
+    constant StateSectionFunction3 : std_logic_vector(7 downto 0) := x"2E";
+    constant StateSectionFunction4 : std_logic_vector(7 downto 0) := x"2F";
+    constant StateSectionTable0 : std_logic_vector(7 downto 0) := x"30";
+    constant StateSectionTable1 : std_logic_vector(7 downto 0) := x"31";
+    constant StateSectionTable2 : std_logic_vector(7 downto 0) := x"32";
+    constant StateSectionTable3 : std_logic_vector(7 downto 0) := x"33";
+    constant StateSectionMemory0 : std_logic_vector(7 downto 0) := x"34";
+    constant StateSectionMemory1 : std_logic_vector(7 downto 0) := x"35";
+    constant StateSectionMemory2 : std_logic_vector(7 downto 0) := x"36";
+    constant StateSectionMemory3 : std_logic_vector(7 downto 0) := x"37";
+    constant StateSectionGlobal0 : std_logic_vector(7 downto 0) := x"38";
+    constant StateSectionGlobal1 : std_logic_vector(7 downto 0) := x"39";
+    constant StateSectionGlobal2 : std_logic_vector(7 downto 0) := x"3A";
+    constant StateSectionGlobal3 : std_logic_vector(7 downto 0) := x"3B";
+    constant StateSectionExport0 : std_logic_vector(7 downto 0) := x"3C";
+    constant StateSectionExport1 : std_logic_vector(7 downto 0) := x"3D";
+    constant StateSectionExport2 : std_logic_vector(7 downto 0) := x"3E";
+    constant StateSectionExport3 : std_logic_vector(7 downto 0) := x"3F";
+    constant StateSectionExport4 : std_logic_vector(7 downto 0) := x"40";
+    constant StateSectionExport5 : std_logic_vector(7 downto 0) := x"41";
+    constant StateSectionExport6 : std_logic_vector(7 downto 0) := x"42";
+    constant StateSectionStart0 : std_logic_vector(7 downto 0) := x"43";
+    constant StateSectionStart1 : std_logic_vector(7 downto 0) := x"44";
+    constant StateSectionStart2 : std_logic_vector(7 downto 0) := x"45";
+    constant StateSectionStart3 : std_logic_vector(7 downto 0) := x"46";
+    constant StateSectionElement0 : std_logic_vector(7 downto 0) := x"47";
+    constant StateSectionElement1 : std_logic_vector(7 downto 0) := x"48";
+    constant StateSectionElement2 : std_logic_vector(7 downto 0) := x"49";
+    constant StateSectionElement3 : std_logic_vector(7 downto 0) := x"4A";
+    constant StateSectionElement4 : std_logic_vector(7 downto 0) := x"4B";
+    constant StateSectionElement5 : std_logic_vector(7 downto 0) := x"4C";
+    constant StateSectionCode0 : std_logic_vector(7 downto 0) := x"4D";
+    constant StateSectionCode1 : std_logic_vector(7 downto 0) := x"4E";
+    constant StateSectionCode2 : std_logic_vector(7 downto 0) := x"4F";
+    constant StateSectionCode3 : std_logic_vector(7 downto 0) := x"50";
+    constant StateSectionCode4 : std_logic_vector(7 downto 0) := x"51";
+    constant StateSectionCode5 : std_logic_vector(7 downto 0) := x"52";
+    constant StateSectionCode6 : std_logic_vector(7 downto 0) := x"53";
+    constant StateSectionData0 : std_logic_vector(7 downto 0) := x"54";
+    constant StateSectionData1 : std_logic_vector(7 downto 0) := x"55";
+    constant StateSectionData2 : std_logic_vector(7 downto 0) := x"56";
+    constant StateSectionData3 : std_logic_vector(7 downto 0) := x"57";
+    constant StateSectionData4 : std_logic_vector(7 downto 0) := x"58";
+    constant StateSectionData5 : std_logic_vector(7 downto 0) := x"59";
+    constant StateLimits0 : std_logic_vector(7 downto 0) := x"5A";
+    constant StateLimits1 : std_logic_vector(7 downto 0) := x"5B";
+    constant StateLimits2 : std_logic_vector(7 downto 0) := x"5C";
+    constant StateLimits3 : std_logic_vector(7 downto 0) := x"5D";
+    constant StateTableType0 : std_logic_vector(7 downto 0) := x"5E";
+    constant StateReadU32_0 : std_logic_vector(7 downto 0) := x"5F";
+    constant StateReadU32_1 : std_logic_vector(7 downto 0) := x"60";
+    constant StateReadU32_2 : std_logic_vector(7 downto 0) := x"61";
+    constant StateReadU32_3 : std_logic_vector(7 downto 0) := x"62";
+    constant StateReadU32_4 : std_logic_vector(7 downto 0) := x"63";
+    constant StateReadU32_5 : std_logic_vector(7 downto 0) := x"64";
+    constant StateWriteStore0 : std_logic_vector(7 downto 0) := x"65";
+    constant StateWriteStore1 : std_logic_vector(7 downto 0) := x"66";
+    constant StateWriteStore2 : std_logic_vector(7 downto 0) := x"67";
+    constant StateReadRam0 : std_logic_vector(7 downto 0) := x"68";
+    constant StateReadRam1 : std_logic_vector(7 downto 0) := x"69";
+    constant StateReadRam2 : std_logic_vector(7 downto 0) := x"6A";
+    constant StateLoaded : std_logic_vector(7 downto 0) := x"FE";
+    constant StateError : std_logic_vector(7 downto 0) := x"FF";
   begin
     if Rst = '1' then
       Opcode <= (others => '0');
@@ -344,651 +325,650 @@ begin
       --
       -- Finished
       --
-      if (LoaderState = LoaderStateIdle0) then
+      if (LoaderState = StateIdle0) then
           Busy <= '0';
           if (Run = '1') then
               Busy <= '1';
-              LoaderState <= to_unsigned(LoaderState0, LoaderState'LENGTH);
+              LoaderState <= StateMagicNumber0;
           end if;
       --
       -- WASM magic number
       --
-      elsif (LoaderState = LoaderState0) then
-        LoaderStateReturn <= to_unsigned(LoaderState1, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState1) then
+      elsif (LoaderState = StateMagicNumber0) then
+        LoaderStateReturn <= StateMagicNumber1;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateMagicNumber1) then
         ReadBinaryMagic(7 downto 0) <= ReadData;
-        LoaderStateReturn <= to_unsigned(LoaderState2, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState2) then
+        LoaderStateReturn <= StateMagicNumber2;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateMagicNumber2) then
         ReadBinaryMagic(15 downto 8) <= ReadData;
-        LoaderStateReturn <= to_unsigned(LoaderState3, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState3) then
+        LoaderStateReturn <= StateMagicNumber3;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateMagicNumber3) then
         ReadBinaryMagic(23 downto 16) <= ReadData;
-        LoaderStateReturn <= to_unsigned(LoaderState4, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState4) then
+        LoaderStateReturn <= StateMagicNumber4;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateMagicNumber4) then
         ReadBinaryMagic(31 downto 24) <= ReadData;
-        LoaderState <= to_unsigned(LoaderState5, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState5) then
+        LoaderState <= StateMagicNumber5;
+      elsif (LoaderState = StateMagicNumber5) then
         if (ReadBinaryMagic = WasmBinaryMagic) then
-          LoaderState <= to_unsigned(LoaderState6, LoaderState'LENGTH);
+          LoaderState <= StateBinaryVersion6;
         else
-          LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+          LoaderState <= StateError;
         end if;
-        LoaderState <= to_unsigned(LoaderState6, LoaderState'LENGTH);
+        LoaderState <= StateBinaryVersion6;
       --
       -- WASM binary version
       --
-      elsif (LoaderState = LoaderState6) then
-        LoaderStateReturn <= to_unsigned(LoaderState7, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState7) then
+      elsif (LoaderState = StateBinaryVersion6) then
+        LoaderStateReturn <= StateBinaryVersion7;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateBinaryVersion7) then
         ReadBinaryVersion(7 downto 0) <= ReadData;
-        LoaderStateReturn <= to_unsigned(LoaderState8, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState8) then
+        LoaderStateReturn <= StateBinaryVersion8;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateBinaryVersion8) then
         ReadBinaryVersion(15 downto 8) <= ReadData;
-        LoaderStateReturn <= to_unsigned(LoaderState9, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState9) then
+        LoaderStateReturn <= StateBinaryVersion9;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateBinaryVersion9) then
         ReadBinaryVersion(23 downto 16) <= ReadData;
-        LoaderStateReturn <= to_unsigned(LoaderState10, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState10) then
+        LoaderStateReturn <= StateBinaryVersion10;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateBinaryVersion10) then
         ReadBinaryVersion(31 downto 24) <= ReadData;
-        LoaderState <= to_unsigned(LoaderState11, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderState11) then
+        LoaderState <= StateBinaryVersion11;
+      elsif (LoaderState = StateBinaryVersion11) then
         if (ReadBinaryVersion = WasmBinaryVersion) then
-          LoaderStateReturn <= to_unsigned(LoaderStateSectionType0, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateSectionType0;
+          LoaderState <= StateReadRam0;
         else
-          LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+          LoaderState <= StateError;
         end if;
       --
       -- Section "Type" (1)
       --
-      elsif (LoaderState = LoaderStateSectionType0) then
+      elsif (LoaderState = StateSectionType0) then
         if (ReadData = SECTION_UID_TYPE(7 downto 0)) then
           SectionUID <= SECTION_UID_TYPE;
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionType1, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+          LoaderStateReturnU32 <= StateSectionType1;
+          LoaderState <= StateReadU32_0;
         else 
-          LoaderState <= to_unsigned(LoaderStateSectionImport0, LoaderState'LENGTH);
+          LoaderState <= StateSectionImport0;
         end if;
-      elsif (LoaderState = LoaderStateSectionType1) then
+      elsif (LoaderState = StateSectionType1) then
           -- section size
           NumTypesIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionType2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionType2) then
+          LoaderStateReturnU32 <= StateSectionType2;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionType2) then
           NumTypes <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionType3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionType3) then
+          LoaderState <= StateSectionType3;
+      elsif (LoaderState = StateSectionType3) then
           -- number of types
         if (NumTypesIteration /= unsigned(NumTypes)) then
             NumTypesIteration <= NumTypesIteration + 1;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionType4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionType4;
+            LoaderState <= StateReadRam0;
         else
             NumTypesIteration <= (others => '0');
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionImport0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionImport0;
+            LoaderState <= StateReadRam0;
         end if;
-      elsif (LoaderState = LoaderStateSectionType4) then
+      elsif (LoaderState = StateSectionType4) then
           -- type
           if (ReadData = x"60") then
             -- func
             NumParamsIteration <= (others => '0');
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateParseFuncType0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateParseFuncType0;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+            LoaderState <= StateError;
           end if;
       --
       -- Parse functype
       --
-      elsif (LoaderState = LoaderStateParseFuncType0) then
+      elsif (LoaderState = StateParseFuncType0) then
           NumParams <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateParseFuncType1, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateParseFuncType1) then
+          LoaderState <= StateParseFuncType1;
+      elsif (LoaderState = StateParseFuncType1) then
         -- num params
         if (NumParamsIteration /= unsigned(NumParams)) then
           NumParamsIteration <= NumParamsIteration + 1;
-          LoaderStateReturn <= to_unsigned(LoaderStateParseFuncType1, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateParseFuncType1;
+          LoaderState <= StateReadRam0;
         else
             NumResultsIteration <= (others => '0');
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateParseFuncType2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateParseFuncType2;
+            LoaderState <= StateReadU32_0;
         end if;
-      elsif (LoaderState = LoaderStateParseFuncType2) then
+      elsif (LoaderState = StateParseFuncType2) then
           NumResults <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateParseFuncType3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateParseFuncType3) then
+          LoaderState <= StateParseFuncType3;
+      elsif (LoaderState = StateParseFuncType3) then
         -- num results
         if (NumResultsIteration /= unsigned(NumResults)) then
           NumResultsIteration <= NumResultsIteration + 1;
-          LoaderStateReturn <= to_unsigned(LoaderStateParseFuncType3, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateParseFuncType3;
+          LoaderState <= StateReadRam0;
         else
-            LoaderState <= to_unsigned(LoaderStateSectionType3, LoaderState'LENGTH);
+            LoaderState <= StateSectionType3;
         end if;
       --
       -- Section "Import" (2)
       --
-      elsif (LoaderState = LoaderStateSectionImport0) then
+      elsif (LoaderState = StateSectionImport0) then
           if (ReadData = SECTION_UID_IMPORT(7 downto 0)) then
             SectionUID <= SECTION_UID_IMPORT;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionImport1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionImport1;
+            LoaderState <= StateReadRam0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionFunction0, LoaderState'LENGTH);
+            LoaderState <= StateSectionFunction0;
           end if;
-      elsif (LoaderState = LoaderStateSectionImport1) then
+      elsif (LoaderState = StateSectionImport1) then
           -- section size
           NumImportsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionImport2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionImport2) then
+          LoaderStateReturnU32 <= StateSectionImport2;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionImport2) then
           NumImports <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionImport3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionImport3) then
+          LoaderState <= StateSectionImport3;
+      elsif (LoaderState = StateSectionImport3) then
           -- number of types
         if (NumImportsIteration /= unsigned(NumImports)) then
             NumImportsIteration <= NumImportsIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionImport4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionImport4;
+            LoaderState <= StateReadU32_0;
         else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionFunction0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionFunction0;
+            LoaderState <= StateReadRam0;
         end if;
-      elsif (LoaderState = LoaderStateSectionImport4) then
+      elsif (LoaderState = StateSectionImport4) then
           -- string length of import module name
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionImport5, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionImport5) then
+          LoaderStateReturnU32 <= StateSectionImport5;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionImport5) then
           -- string length of import field name
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
-          LoaderStateReturn <= to_unsigned(LoaderStateSectionImport6, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionImport6) then
+          LoaderStateReturn <= StateSectionImport6;
+          LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateSectionImport6) then
           -- import kind 
           if (ReadData = x"00") then
             -- functype
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionImportFuncType0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionImportFuncType0;
+            LoaderState <= StateReadU32_0;
           elsif (ReadData = x"01") then
             -- tabletype
-            LoaderStateReturnTableType <= to_unsigned(LoaderStateSectionImport3, LoaderState'LENGTH);
-            LoaderStateReturn <= to_unsigned(LoaderStateTableType0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturnTableType <= StateSectionImport3;
+            LoaderStateReturn <= StateTableType0;
+            LoaderState <= StateReadRam0;
           elsif (ReadData = x"02") then
             -- memtype
-            LoaderStateReturnLimits <= to_unsigned(LoaderStateSectionImport3, LoaderState'LENGTH);
-            LoaderStateReturn <= to_unsigned(LoaderStateLimits0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturnLimits <= StateSectionImport3;
+            LoaderStateReturn <= StateLimits0;
+            LoaderState <= StateReadRam0;
           elsif (ReadData = x"03") then
             -- globaltype
-            LoaderStateReturnGlobalType <= to_unsigned(LoaderStateSectionImport3, LoaderState'LENGTH);
-            LoaderStateReturn <= to_unsigned(LoaderStateGlobalType0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturnGlobalType <= StateSectionImport3;
+            LoaderStateReturn <= StateGlobalType0;
+            LoaderState <= StateReadRam0;
           else
-            LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+            LoaderState <= StateError;
           end if;
       --
       -- Section "Import" (2) - FuncType
       --
-      elsif (LoaderState = LoaderStateSectionImportFuncType0) then
+      elsif (LoaderState = StateSectionImportFuncType0) then
           -- typeidx
-          LoaderState <= to_unsigned(LoaderStateSectionImport3, LoaderState'LENGTH);
+          LoaderState <= StateSectionImport3;
       --
       -- Section "Import" (2) - MemType
       --
-      elsif (LoaderState = LoaderStateSectionImportMemType0) then
+      elsif (LoaderState = StateSectionImportMemType0) then
           -- export func index
-          LoaderState <= to_unsigned(LoaderStateSectionExport3, LoaderState'LENGTH);
+          LoaderState <= StateSectionExport3;
       --
       -- Section "Function" (3)
       --
-      elsif (LoaderState = LoaderStateSectionFunction0) then
+      elsif (LoaderState = StateSectionFunction0) then
           if (ReadData = SECTION_UID_FUNCTION(7 downto 0)) then
             SectionUID <= SECTION_UID_FUNCTION;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionFunction1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionFunction1;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionTable0, LoaderState'LENGTH);
+            LoaderState <= StateSectionTable0;
           end if;
-      elsif (LoaderState = LoaderStateSectionFunction1) then
+      elsif (LoaderState = StateSectionFunction1) then
           -- section size
             NumFunctionsIteration <= (others => '0');
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionFunction2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionFunction2) then
+            LoaderStateReturnU32 <= StateSectionFunction2;
+            LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionFunction2) then
           NumFunctions <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionFunction3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionFunction3) then
+          LoaderState <= StateSectionFunction3;
+      elsif (LoaderState = StateSectionFunction3) then
           -- num functions
           if (NumFunctionsIteration /= unsigned(NumFunctions)) then
             NumFunctionsIteration <= NumFunctionsIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionFunction4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionFunction4;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionTable0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionTable0;
+            LoaderState <= StateReadRam0;
           end if;
-      elsif (LoaderState = LoaderStateSectionFunction4) then
+      elsif (LoaderState = StateSectionFunction4) then
           -- function signature index
-          LoaderState <= to_unsigned(LoaderStateSectionFunction3, LoaderState'LENGTH);
+          LoaderState <= StateSectionFunction3;
       --
       -- Section "Table" (4)
       --
-      elsif (LoaderState = LoaderStateSectionTable0) then
+      elsif (LoaderState = StateSectionTable0) then
           if (ReadData = SECTION_UID_TABLE(7 downto 0)) then
             SectionUID <= SECTION_UID_TABLE;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionTable1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionTable1;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionMemory0, LoaderState'LENGTH);
+            LoaderState <= StateSectionMemory0;
           end if;
-      elsif (LoaderState = LoaderStateSectionTable1) then
+      elsif (LoaderState = StateSectionTable1) then
           -- section size
           NumTablesIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionTable2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionTable2) then
+          LoaderStateReturnU32 <= StateSectionTable2;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionTable2) then
           NumTables <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionTable3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionTable3) then
+          LoaderState <= StateSectionTable3;
+      elsif (LoaderState = StateSectionTable3) then
           -- num tables
           if (NumTablesIteration /= unsigned(NumTables)) then
             NumTablesIteration <= NumTablesIteration + 1;
-            LoaderStateReturnTableType <= to_unsigned(LoaderStateSectionTable3, LoaderState'LENGTH);
-            LoaderStateReturn <= to_unsigned(LoaderStateTableType0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturnTableType <= StateSectionTable3;
+            LoaderStateReturn <= StateTableType0;
+            LoaderState <= StateReadRam0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionMemory0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionMemory0;
+            LoaderState <= StateReadRam0;
           end if;
       --
       -- Section "Memory" (5)
       --
-      elsif (LoaderState = LoaderStateSectionMemory0) then
+      elsif (LoaderState = StateSectionMemory0) then
           if (ReadData = SECTION_UID_MEMORY(7 downto 0)) then
             SectionUID <= SECTION_UID_MEMORY;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionMemory1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionMemory1;
+            LoaderState <= StateReadRam0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionGlobal0, LoaderState'LENGTH);
+            LoaderState <= StateSectionGlobal0;
           end if;
-      elsif (LoaderState = LoaderStateSectionMemory1) then
+      elsif (LoaderState = StateSectionMemory1) then
           -- section size
             NumMemoriesIteration <= (others => '0');
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionMemory2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionMemory2) then
+            LoaderStateReturnU32 <= StateSectionMemory2;
+            LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionMemory2) then
           NumMemories <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionMemory3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionMemory3) then
+          LoaderState <= StateSectionMemory3;
+      elsif (LoaderState = StateSectionMemory3) then
           -- num memories
           if (NumMemoriesIteration /= unsigned(NumMemories)) then
             NumMemoriesIteration <= NumMemoriesIteration + 1;
-            LoaderStateReturnLimits <= to_unsigned(LoaderStateSectionMemory3, LoaderState'LENGTH);
-            LoaderStateReturn <= to_unsigned(LoaderStateLimits0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturnLimits <= StateSectionMemory3;
+            LoaderStateReturn <= StateLimits0;
+            LoaderState <= StateReadRam0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionGlobal0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionGlobal0;
+            LoaderState <= StateReadRam0;
           end if;
       --
       -- Section "Global" (6)
       --
-      elsif (LoaderState = LoaderStateSectionGlobal0) then
+      elsif (LoaderState = StateSectionGlobal0) then
           if (ReadData = SECTION_UID_GLOBAL(7 downto 0)) then
             SectionUID <= SECTION_UID_GLOBAL;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionGlobal1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionGlobal1;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionExport0, LoaderState'LENGTH);
+            LoaderState <= StateSectionExport0;
           end if;
-      elsif (LoaderState = LoaderStateSectionGlobal1) then
+      elsif (LoaderState = StateSectionGlobal1) then
           -- section size
             NumGlobalsIteration <= (others => '0');
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionGlobal2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionGlobal2) then
+            LoaderStateReturnU32 <= StateSectionGlobal2;
+            LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionGlobal2) then
           NumGlobals <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionGlobal3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionGlobal3) then
+          LoaderState <= StateSectionGlobal3;
+      elsif (LoaderState = StateSectionGlobal3) then
           -- num memories
           if (NumGlobalsIteration /= unsigned(NumGlobals)) then
             NumGlobalsIteration <= NumGlobalsIteration + 1;
-            LoaderStateReturnGlobalType <= to_unsigned(LoaderStateSectionGlobal3, LoaderState'LENGTH);
-            LoaderStateReturn <= to_unsigned(LoaderStateGlobalType0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturnGlobalType <= StateSectionGlobal3;
+            LoaderStateReturn <= StateGlobalType0;
+            LoaderState <= StateReadRam0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionExport0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionExport0;
+            LoaderState <= StateReadRam0;
           end if;
       --
       -- Section "Export" (7)
       --
-      elsif (LoaderState = LoaderStateSectionExport0) then
+      elsif (LoaderState = StateSectionExport0) then
           if (ReadData = SECTION_UID_EXPORT(7 downto 0)) then
             SectionUID <= SECTION_UID_EXPORT;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionExport1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionExport1;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionStart0, LoaderState'LENGTH);
+            LoaderState <= StateSectionStart0;
           end if;
-      elsif (LoaderState = LoaderStateSectionExport1) then
+      elsif (LoaderState = StateSectionExport1) then
           -- section size
           NumExportsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionExport2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionExport2) then
+          LoaderStateReturnU32 <= StateSectionExport2;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionExport2) then
           NumExports <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionExport3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionExport3) then
+          LoaderState <= StateSectionExport3;
+      elsif (LoaderState = StateSectionExport3) then
           -- num exports
           if (NumExportsIteration /= unsigned(NumExports)) then
             NumExportsIteration <= NumExportsIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionExport4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionExport4;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionStart0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionStart0;
+            LoaderState <= StateReadRam0;
           end if;
-      elsif (LoaderState = LoaderStateSectionExport4) then
+      elsif (LoaderState = StateSectionExport4) then
           -- string length
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
-          LoaderStateReturn <= to_unsigned(LoaderStateSectionExport5, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionExport5) then
+          LoaderStateReturn <= StateSectionExport5;
+          LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateSectionExport5) then
           -- export kind
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionExport6, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionExport6) then
+          LoaderStateReturnU32 <= StateSectionExport6;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionExport6) then
           -- export func index
-          LoaderState <= to_unsigned(LoaderStateSectionExport3, LoaderState'LENGTH);
+          LoaderState <= StateSectionExport3;
       --
       -- Section "Start" (8)
       --
-      elsif (LoaderState = LoaderStateSectionStart0) then
+      elsif (LoaderState = StateSectionStart0) then
           if (ReadData = SECTION_UID_START(7 downto 0)) then
             SectionUID <= SECTION_UID_START;
             Idx <= (others => '0');
             Address <= x"00" & ReadAddress;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionStart1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateWriteStore0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionStart1;
+            LoaderState <= StateWriteStore0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionElement0, LoaderState'LENGTH);
+            LoaderState <= StateSectionElement0;
           end if;
-      elsif (LoaderState = LoaderStateSectionStart1) then
-        LoaderStateReturn <= to_unsigned(LoaderStateSectionStart2, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionStart2) then
+      elsif (LoaderState = StateSectionStart1) then
+        LoaderStateReturn <= StateSectionStart2;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateSectionStart2) then
           -- section size
-          NumExportsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionStart3, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionStart3) then
+          LoaderStateReturnU32 <= StateSectionStart3;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionStart3) then
           StartFuncIndex <= DecodedValue;
-          LoaderStateReturn <= to_unsigned(LoaderStateSectionElement0, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateSectionElement0;
+          LoaderState <= StateReadRam0;
       --
       -- Section "Element" (9)
       --
-      elsif (LoaderState = LoaderStateSectionElement0) then
+      elsif (LoaderState = StateSectionElement0) then
           if (ReadData = SECTION_UID_ELEMENT(7 downto 0)) then
             SectionUID <= SECTION_UID_ELEMENT;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionElement1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionElement1;
+            LoaderState <= StateReadRam0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionCode0, LoaderState'LENGTH);
+            LoaderState <= StateSectionCode0;
           end if;
-      elsif (LoaderState = LoaderStateSectionElement1) then
+      elsif (LoaderState = StateSectionElement1) then
           -- section size
           NumElementsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionElement2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionElement2) then
+          LoaderStateReturnU32 <= StateSectionElement2;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionElement2) then
           NumElements <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionElement3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionElement3) then
+          LoaderState <= StateSectionElement3;
+      elsif (LoaderState = StateSectionElement3) then
           -- num elements
           if (NumElementsIteration /= unsigned(NumElements)) then
             NumElementsIteration <= NumElementsIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionElement4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionElement4;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionCode0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionCode0;
+            LoaderState <= StateReadRam0;
           end if;
-      elsif (LoaderState = LoaderStateSectionElement4) then
+      elsif (LoaderState = StateSectionElement4) then
           -- typeidx
           if (ReadData /= x"0B") then
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionElement4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionElement4;
+            LoaderState <= StateReadRam0;
           else
             NumFunctionsIteration <= (others => '0');
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionElement5, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionElement5;
+            LoaderState <= StateReadU32_0;
           end if;
-      elsif (LoaderState = LoaderStateSectionElement4) then
+      elsif (LoaderState = StateSectionElement4) then
           NumFunctions <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionElement5, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionElement5) then
+          LoaderState <= StateSectionElement5;
+      elsif (LoaderState = StateSectionElement5) then
           -- num elements
           if (NumFunctionsIteration /= unsigned(NumFunctions)) then
             NumFunctionsIteration <= NumFunctionsIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionElement5, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionElement5;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionElement3, LoaderState'LENGTH);
+            LoaderState <= StateSectionElement3;
           end if;
       --
       -- Section "Code" (10)
       --
-      elsif (LoaderState = LoaderStateSectionCode0) then
+      elsif (LoaderState = StateSectionCode0) then
           if (ReadData = SECTION_UID_CODE(7 downto 0)) then
             SectionUID <= SECTION_UID_CODE;
             Idx <= (others => '0');
             Address <= x"00" & ReadAddress;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionCode1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateWriteStore0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionCode1;
+            LoaderState <= StateWriteStore0;
           else
-            LoaderState <= to_unsigned(LoaderStateSectionData0, LoaderState'LENGTH);
+            LoaderState <= StateSectionData0;
           end if;
-      elsif (LoaderState = LoaderStateSectionCode1) then
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionCode2) then
+      elsif (LoaderState = StateSectionCode1) then
+            LoaderStateReturnU32 <= StateSectionCode2;
+            LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionCode2) then
           -- section size
           NumFunctionsIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode3, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionCode3) then
+          LoaderStateReturnU32 <= StateSectionCode3;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionCode3) then
           NumFunctions <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionCode4, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionCode4) then
+          LoaderState <= StateSectionCode4;
+      elsif (LoaderState = StateSectionCode4) then
           -- num functions
           if (NumFunctionsIteration /= unsigned(NumFunctions)) then
             NumFunctionsIteration <= NumFunctionsIteration + 1;
             Idx <= std_logic_vector(NumFunctionsIteration);
             Address <= x"00" & ReadAddress;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionCode5, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateWriteStore0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionCode5;
+            LoaderState <= StateWriteStore0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionData0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionData0;
+            LoaderState <= StateReadRam0;
           end if;
-      elsif (LoaderState = LoaderStateSectionCode5) then
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionCode6, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionCode6) then
+      elsif (LoaderState = StateSectionCode5) then
+            LoaderStateReturnU32 <= StateSectionCode6;
+            LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionCode6) then
           -- func body size
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
-          LoaderState <= to_unsigned(LoaderStateSectionCode4, LoaderState'LENGTH);
+          LoaderState <= StateSectionCode4;
       --
       -- Section "Data" (11)
       --
-      elsif (LoaderState = LoaderStateSectionData0) then
+      elsif (LoaderState = StateSectionData0) then
           if (ReadData = SECTION_UID_DATA(7 downto 0)) then
             SectionUID <= SECTION_UID_DATA;
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionData1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionData1;
+            LoaderState <= StateReadRam0;
           else
-            LoaderState <= to_unsigned(LoaderStateLoaded, LoaderState'LENGTH);
+            LoaderState <= StateLoaded;
           end if;
-      elsif (LoaderState = LoaderStateSectionData1) then
+      elsif (LoaderState = StateSectionData1) then
           -- section size 
           NumDataIteration <= (others => '0');
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionData2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionData2) then
+          LoaderStateReturnU32 <= StateSectionData2;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateSectionData2) then
           NumData <= DecodedValue;
-          LoaderState <= to_unsigned(LoaderStateSectionData3, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateSectionData3) then
+          LoaderState <= StateSectionData3;
+      elsif (LoaderState = StateSectionData3) then
           -- num data segments
           if (NumDataIteration /= unsigned(NumData)) then
             NumDataIteration <= NumDataIteration + 1;
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionData4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionData4;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateLoaded, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateLoaded;
+            LoaderState <= StateReadRam0;
           end if;
-      elsif (LoaderState = LoaderStateSectionData4) then
+      elsif (LoaderState = StateSectionData4) then
           -- data segment flags (memidx)
           if (ReadData /= x"0B") then
-            LoaderStateReturn <= to_unsigned(LoaderStateSectionData4, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateSectionData4;
+            LoaderState <= StateReadRam0;
           else
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateSectionData5, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateSectionData5;
+            LoaderState <= StateReadU32_0;
           end if;
-      elsif (LoaderState = LoaderStateSectionData5) then
+      elsif (LoaderState = StateSectionData5) then
           -- data segment size
           ReadAddress <= std_logic_vector(unsigned(ReadAddress) + unsigned(DecodedValue(9 downto 0)));
-          LoaderState <= to_unsigned(LoaderStateSectionData3, LoaderState'LENGTH);
+          LoaderState <= StateSectionData3;
       --
       -- Loaded
       --
-      elsif (LoaderState = LoaderStateLoaded) then
+      elsif (LoaderState = StateLoaded) then
         LoadedBuf <= '1';
-        LoaderState <= to_unsigned(LoaderStateIdle0, LoaderState'LENGTH);
+        LoaderState <= StateIdle0;
       --
       -- Read globaltype
       --
-      elsif (LoaderState = LoaderStateGlobalType0) then
+      elsif (LoaderState = StateGlobalType0) then
           -- valtype
-          LoaderStateReturn <= to_unsigned(LoaderStateGlobalType1, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateGlobalType1) then
+          LoaderStateReturn <= StateGlobalType1;
+          LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateGlobalType1) then
           -- mutability
-          LoaderStateReturn <= to_unsigned(LoaderStateGlobalType2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateGlobalType2) then
+          LoaderStateReturn <= StateGlobalType2;
+          LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateGlobalType2) then
           -- data segment flags (memidx)
           if (ReadData /= x"0B") then
-            LoaderStateReturn <= to_unsigned(LoaderStateGlobalType2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateGlobalType2;
+            LoaderState <= StateReadRam0;
           else
-            LoaderStateReturn <= to_unsigned(LoaderStateGlobalType3, LoaderState'LENGTH);
+            LoaderStateReturn <= StateGlobalType3;
           end if;
       --
       -- Read tabletype
       --
-      elsif (LoaderState = LoaderStateTableType0) then
+      elsif (LoaderState = StateTableType0) then
           -- elemtype
           if (ReadData = x"70") then
             LoaderStateReturnLimits <= LoaderStateReturnTableType;
-            LoaderStateReturn <= to_unsigned(LoaderStateLimits0, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+            LoaderStateReturn <= StateLimits0;
+            LoaderState <= StateReadRam0;
           else
-            LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+            LoaderState <= StateError;
           end if;
       --
       -- Read limits
       --
-      elsif (LoaderState = LoaderStateLimits0) then
+      elsif (LoaderState = StateLimits0) then
           -- limits
           if (ReadData = x"00") then
             -- min
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateLimits1, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateLimits1;
+            LoaderState <= StateReadU32_0;
           elsif(ReadData = x"01") then
             -- min, max
-            LoaderStateReturnU32 <= to_unsigned(LoaderStateLimits2, LoaderState'LENGTH);
-            LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
+            LoaderStateReturnU32 <= StateLimits2;
+            LoaderState <= StateReadU32_0;
           else
-            LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+            LoaderState <= StateError;
           end if;
-      elsif (LoaderState = LoaderStateLimits1) then
+      elsif (LoaderState = StateLimits1) then
           -- min
           LoaderState <= LoaderStateReturnLimits;
-      elsif (LoaderState = LoaderStateLimits2) then
+      elsif (LoaderState = StateLimits2) then
           -- min
-          LoaderStateReturnU32 <= to_unsigned(LoaderStateLimits3, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadU32_0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateLimits3) then
+          LoaderStateReturnU32 <= StateLimits3;
+          LoaderState <= StateReadU32_0;
+      elsif (LoaderState = StateLimits3) then
           -- max
           LoaderState <= LoaderStateReturnLimits;
       --
       -- Read u32 (LEB128 encoded)
       --
-      elsif (LoaderState = LoaderStateReadU32_0) then
+      elsif (LoaderState = StateReadU32_0) then
         DecodedValue <= (others => '0');
-        LoaderStateReturn <= to_unsigned(LoaderStateReadU32_1, LoaderState'LENGTH);
-        LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateReadU32_1) then
+        LoaderStateReturn <= StateReadU32_1;
+        LoaderState <= StateReadRam0;
+      elsif (LoaderState = StateReadU32_1) then
         if ((ReadData and x"80") = x"00") then
           -- 1 byte
           DecodedValue(6 downto 0) <= ReadData(6 downto 0);
           LoaderState <= LoaderStateReturnU32;
         else 
-          LoaderStateReturn <= to_unsigned(LoaderStateReadU32_2, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateReadU32_2;
+          LoaderState <= StateReadRam0;
         end if;
-      elsif (LoaderState = LoaderStateReadU32_3) then
+      elsif (LoaderState = StateReadU32_3) then
         if ((ReadData and x"80") = x"00") then
           -- 2 byte
           DecodedValue(13 downto 7) <= ReadData(6 downto 0);
           LoaderState <= LoaderStateReturnU32;
         else
-          LoaderStateReturn <= to_unsigned(LoaderStateReadU32_4, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateReadU32_4;
+          LoaderState <= StateReadRam0;
         end if;
-      elsif (LoaderState = LoaderStateReadU32_4) then
+      elsif (LoaderState = StateReadU32_4) then
         if ((ReadData and x"80") = x"00") then
           -- 3 byte
           DecodedValue(20 downto 14) <= ReadData(6 downto 0);
           LoaderState <= LoaderStateReturnU32;
         else
-          LoaderStateReturn <= to_unsigned(LoaderStateReadU32_5, LoaderState'LENGTH);
-          LoaderState <= to_unsigned(LoaderStateReadRam0, LoaderState'LENGTH);
+          LoaderStateReturn <= StateReadU32_5;
+          LoaderState <= StateReadRam0;
         end if;
-      elsif (LoaderState = LoaderStateReadU32_5) then
+      elsif (LoaderState = StateReadU32_5) then
         if ((ReadData and x"80") = x"00") then
           -- 4 byte
           DecodedValue(27 downto 21) <= ReadData(6 downto 0);
           LoaderState <= LoaderStateReturnU32;
         else
           -- > u32 not supported
-          LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+          LoaderState <= StateError;
         end if;
       --
       -- Read from Module RAM
       --
-      elsif (LoaderState = LoaderStateReadRam0) then
+      elsif (LoaderState = StateReadRam0) then
         ReadModuleRun <= '1';
-        LoaderState <= to_unsigned(LoaderStateReadRam1, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateReadRam1) then
-        LoaderState <= to_unsigned(LoaderStateReadRam2, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateReadRam2) then
+        LoaderState <= StateReadRam1;
+      elsif (LoaderState = StateReadRam1) then
+        LoaderState <= StateReadRam2;
+      elsif (LoaderState = StateReadRam2) then
         ReadModuleRun <= '0';
         if(ReadModuleBusy = '0') then
             if ReadAddress(1 downto 0) = "00" then
@@ -1006,12 +986,12 @@ begin
       --
       -- Write to Store
       --
-      elsif (LoaderState = LoaderStateWriteStore0) then
+      elsif (LoaderState = StateWriteStore0) then
         StoreRun <= '1';
-        LoaderState <= to_unsigned(LoaderStateWriteStore1, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateWriteStore1) then
-        LoaderState <= to_unsigned(LoaderStateWriteStore2, LoaderState'LENGTH);
-      elsif (LoaderState = LoaderStateWriteStore2) then
+        LoaderState <= StateWriteStore1;
+      elsif (LoaderState = StateWriteStore1) then
+        LoaderState <= StateWriteStore2;
+      elsif (LoaderState = StateWriteStore2) then
         StoreRun <= '0';
         if(StoreBusy = '0') then
           LoaderState <= LoaderStateReturn;
@@ -1019,8 +999,8 @@ begin
       --
       -- Trap
       --
-      elsif (LoaderState = LoaderStateError) then
-        LoaderState <= to_unsigned(LoaderStateError, LoaderState'LENGTH);
+      elsif (LoaderState = StateError) then
+        LoaderState <= StateError;
       end if;
     end if;
   end process;
