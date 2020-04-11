@@ -143,12 +143,12 @@ architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
 
   signal LoadedBuf : std_logic;
 
-	signal LoaderState : unsigned(7 downto 0);
-  signal LoaderStateReturn : unsigned(7 downto 0);
-  signal LoaderStateReturnU32 : unsigned(7 downto 0);
-  signal LoaderStateReturnLimits : unsigned(7 downto 0);
-  signal LoaderStateReturnTableType : unsigned(7 downto 0);
-  signal LoaderStateReturnGlobalType : unsigned(7 downto 0);
+	signal LoaderState : std_logic_vector(7 downto 0);
+  signal LoaderStateReturn : std_logic_vector(7 downto 0);
+  signal LoaderStateReturnU32 : std_logic_vector(7 downto 0);
+  signal LoaderStateReturnLimits : std_logic_vector(7 downto 0);
+  signal LoaderStateReturnTableType : std_logic_vector(7 downto 0);
+  signal LoaderStateReturnGlobalType : std_logic_vector(7 downto 0);
 
   constant WasmBinaryMagic : std_logic_vector(31 downto 0) := x"6D736100";
   constant WasmBinaryVersion : std_logic_vector(31 downto 0) := x"00000001";
