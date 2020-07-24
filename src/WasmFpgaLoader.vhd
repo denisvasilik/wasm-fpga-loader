@@ -6,14 +6,14 @@ library work;
   use work.WasmFpgaStoreWshBn_Package.all;
 
 entity WasmFpgaLoader is
-    port ( 
+    port (
         Clk : in std_logic;
         nRst : in std_logic;
         Adr : in std_logic_vector(23 downto 0);
         Sel : in std_logic_vector(3 downto 0);
-        DatIn : in std_logic_vector(31 downto 0); 
+        DatIn : in std_logic_vector(31 downto 0);
         We : in std_logic;
-        Stb : in std_logic; 
+        Stb : in std_logic;
         Cyc : in std_logic_vector(0 downto 0);
         DatOut : out std_logic_vector(31 downto 0);
         Ack : out std_logic;
@@ -395,7 +395,7 @@ begin
           SectionUID <= SECTION_UID_TYPE;
           LoaderStateReturnU32 <= StateSectionType1;
           LoaderState <= StateReadU32_0;
-        else 
+        else
           LoaderState <= StateSectionImport0;
         end if;
       elsif (LoaderState = StateSectionType1) then
@@ -496,7 +496,7 @@ begin
           LoaderStateReturn <= StateSectionImport6;
           LoaderState <= StateReadRam0;
       elsif (LoaderState = StateSectionImport6) then
-          -- import kind 
+          -- import kind
           if (ReadData = x"00") then
             -- functype
             LoaderStateReturnU32 <= StateSectionImportFuncType0;
@@ -775,7 +775,7 @@ begin
       elsif (LoaderState = StateSectionCode0) then
           if (ReadData = SECTION_UID_CODE(7 downto 0)) then
             SectionUID <= SECTION_UID_CODE;
-            Idx <= (others => '0');
+            Idx <= (others => '1');
             Address <= x"00" & ReadAddress;
             LoaderStateReturn <= StateSectionCode1;
             LoaderState <= StateWriteStore0;
@@ -824,7 +824,7 @@ begin
             LoaderState <= StateLoaded;
           end if;
       elsif (LoaderState = StateSectionData1) then
-          -- section size 
+          -- section size
           NumDataIteration <= (others => '0');
           LoaderStateReturnU32 <= StateSectionData2;
           LoaderState <= StateReadU32_0;
@@ -929,7 +929,7 @@ begin
           -- 1 byte
           DecodedValue(6 downto 0) <= ReadData(6 downto 0);
           LoaderState <= LoaderStateReturnU32;
-        else 
+        else
           LoaderStateReturn <= StateReadU32_2;
           LoaderState <= StateReadRam0;
         end if;
@@ -977,7 +977,7 @@ begin
                 ReadData <= ReadModuleData(15 downto 8);
             elsif ReadAddress(1 downto 0) = "10" then
                 ReadData <= ReadModuleData(23 downto 16);
-            else 
+            else
                 ReadData <= ReadModuleData(31 downto 24);
             end if;
             ReadAddress <= std_logic_vector(unsigned(ReadAddress) + 1);

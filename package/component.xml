@@ -340,7 +340,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>15da27da</spirit:value>
+            <spirit:value>1c15ed2d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -361,7 +361,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>2daf9189</spirit:value>
+            <spirit:value>a5af1e33</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -382,7 +382,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>2daf9189</spirit:value>
+            <spirit:value>a5af1e33</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -821,6 +821,12 @@
     <spirit:fileSet>
       <spirit:name>xilinx_testbench_view_fileset</spirit:name>
       <spirit:file>
+        <spirit:name>../../wasm-fpga-store/src/WasmFpgaStore.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
+        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>../tb/tb_std_logic_1164_additions.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
@@ -866,6 +872,14 @@
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagesynthesis_view_fileset</spirit:name>
       <spirit:file>
+        <spirit:name>../resources/wasm_fpga_store_header.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../src/WasmFpgaWishbone.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>../hxs_gen/vhd_gen/header/wasm_fpga_loader_header.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
@@ -880,7 +894,7 @@
       <spirit:file>
         <spirit:name>../src/WasmFpgaLoader.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_ef9275ad</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_e05b4318</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -905,6 +919,14 @@
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagebehavioralsimulation_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>../resources/wasm_fpga_store_header.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../src/WasmFpgaWishbone.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
       <spirit:file>
         <spirit:name>../hxs_gen/vhd_gen/header/wasm_fpga_loader_header.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
@@ -960,17 +982,34 @@
         <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>WebAssembly Loader IP</xilinx:displayName>
-      <xilinx:coreRevision>19</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2020-02-26T17:26:40Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>21</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2020-07-21T21:08:17Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4dc173fe_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67349dea_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37a7382d_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@19231e02_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c20520d_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@dc6d50d_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f3bb6a0_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1b3d911b_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@8eba934_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5694b742_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@34273bbc_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f6d5805_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2856706f_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@783343f8_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@266148de_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4fdeda96_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51b4d258_ARCHIVE_LOCATION">/home/ubuntu-dev/git/webassembly/wasm-fpga-loader/package</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.2</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="3dcdffef"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="23c1ff3e"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="9f2ff7eb"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="89681c72"/>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="f37eb548"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="9814e88e"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="61de6878"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="1f4f63d9"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>
