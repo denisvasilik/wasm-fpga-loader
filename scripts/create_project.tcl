@@ -3,7 +3,7 @@ set project_work  "work"
 set project_name "WasmFpgaLoader"
 set project_part "xc7a100tcsg324-1"
 set project_src  "src"
-set project_src_gen "hxs_gen"
+set project_resources "resources"
 set project_ip "ip"
 set project_tb "tb"
 set project_package "package"
@@ -43,7 +43,7 @@ printMessage "Set IP repository paths"
 
 set obj [get_filesets sources_1]
 
-set_property "ip_repo_paths" "[file normalize "project_origin/vivado-bus-abstraction-wb-ip"]" $obj
+set_property "ip_repo_paths" "[file normalize "${project_origin}/vivado-bus-abstraction-wb"]" $obj
 
 # Rebuild user ip_repo's index before adding any source files
 update_ip_catalog -rebuild
@@ -59,10 +59,10 @@ set obj [get_filesets sources_1]
 set files_vhd [list \
  [file normalize "${project_src}/WasmFpgaLoader.vhd" ]\
  [file normalize "${project_src}/WasmFpgaWishbone.vhd" ]\
- [file normalize "${project_src}/../resources/wasm_fpga_store_header.vhd" ]\
- [file normalize "${project_src}/../resources/wasm_fpga_store_wishbone.vhd" ]\
- [file normalize "${project_src_gen}/vhd_gen/header/wasm_fpga_loader_header.vhd" ]\
- [file normalize "${project_src_gen}/vhd_gen/wishbone/wasm_fpga_loader_wishbone.vhd" ]\
+ [file normalize "${project_resources}/wasm_fpga_store_header.vhd" ]\
+ [file normalize "${project_resources}/wasm_fpga_store_wishbone.vhd" ]\
+ [file normalize "${project_resources}/wasm_fpga_loader_header.vhd" ]\
+ [file normalize "${project_resources}/wasm_fpga_loader_wishbone.vhd" ]\
  [file normalize "${project_package}/component.xml" ]\
 ]
 add_files -norecurse -fileset $obj $files_vhd
@@ -94,7 +94,7 @@ if {[string equal [get_filesets -quiet sim_1] ""]} {
 set obj [get_filesets sim_1]
 set files [list \
  "[file normalize "${project_tb}/tb_WasmFpgaLoader.vhd"]"\
- "[file normalize "${project_tb}/tb_FileIO.vhd"]"\
+ "[file normalize "${project_tb}/tb_FileIo.vhd"]"\
  "[file normalize "${project_tb}/tb_pkg_helper.vhd"]"\
  "[file normalize "${project_tb}/tb_pkg.vhd"]"\
  "[file normalize "${project_tb}/tb_std_logic_1164_additions.vhd"]"\

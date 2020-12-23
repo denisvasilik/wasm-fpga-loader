@@ -57,9 +57,9 @@ architecture behavioural of tb_WasmFpgaLoader is
             nRst : in std_logic;
             Adr : in std_logic_vector(23 downto 0);
             Sel : in std_logic_vector(3 downto 0);
-            DatIn : in std_logic_vector(31 downto 0); 
+            DatIn : in std_logic_vector(31 downto 0);
             We : in std_logic;
-            Stb : in std_logic; 
+            Stb : in std_logic;
             Cyc : in std_logic_vector(0 downto 0);
             DatOut : out std_logic_vector(31 downto 0);
             Ack : out std_logic
@@ -85,9 +85,9 @@ architecture behavioural of tb_WasmFpgaLoader is
         nRst : in std_logic;
         Adr : in std_logic_vector(23 downto 0);
         Sel : in std_logic_vector(3 downto 0);
-        DatIn : in std_logic_vector(31 downto 0); 
+        DatIn : in std_logic_vector(31 downto 0);
         We : in std_logic;
-        Stb : in std_logic; 
+        Stb : in std_logic;
         Cyc : in std_logic_vector(0 downto 0);
         DatOut : out std_logic_vector(31 downto 0);
         Ack : out std_logic;
@@ -107,6 +107,14 @@ architecture behavioural of tb_WasmFpgaLoader is
         Store_DatIn: in std_logic_vector(31 downto 0);
         Store_Ack : in std_logic;
         Store_Cyc : out std_logic_vector(0 downto 0);
+        Uart_Adr : out std_logic_vector(23 downto 0);
+        Uart_Sel : out std_logic_vector(3 downto 0);
+        Uart_DatIn: in std_logic_vector(31 downto 0);
+        Uart_We : out std_logic;
+        Uart_Stb : out std_logic;
+        Uart_Cyc : out std_logic_vector(0 downto 0);
+        Uart_DatOut : out std_logic_vector(31 downto 0);
+        Uart_Ack : in std_logic;
         Loaded : out std_logic
       );
     end component;
@@ -165,7 +173,7 @@ begin
         );
 
     ModuleMemory_i : WbRam
-        port map ( 
+        port map (
             Clk => Clk100M,
             nRst => nRst,
             Adr => ModuleMemory_Adr,
@@ -179,7 +187,7 @@ begin
         );
 
     StoreMemory_i : WbRam
-        port map ( 
+        port map (
             Clk => Clk100M,
             nRst => nRst,
             Adr => StoreMemory_Adr,
@@ -220,6 +228,14 @@ begin
             Store_DatIn => Store_DatOut,
             Store_Ack => Store_Ack,
             Store_Cyc => Store_Cyc,
+            Uart_Adr => open,
+            Uart_Sel => open,
+            Uart_DatIn => (others => '0'),
+            Uart_We => open,
+            Uart_Stb => open,
+            Uart_Cyc => open,
+            Uart_DatOut => open,
+            Uart_Ack => '0',
             Loaded => WasmFpgaLoader_FileIO.Loaded
        );
 
