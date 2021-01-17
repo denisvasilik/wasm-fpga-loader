@@ -3,6 +3,7 @@ library ieee;
   use ieee.numeric_std.all;
 
 library work;
+  use work.WasmFpgaLoaderPackage.all;
   use work.WasmFpgaStoreWshBn_Package.all;
 
 entity WasmFpgaLoader is
@@ -33,14 +34,6 @@ entity WasmFpgaLoader is
         Store_DatIn : in std_logic_vector(31 downto 0);
         Store_Ack : in std_logic;
         Store_Cyc : out std_logic_vector(0 downto 0);
-        Uart_Adr : out std_logic_vector(23 downto 0);
-        Uart_Sel : out std_logic_vector(3 downto 0);
-        Uart_DatIn: in std_logic_vector(31 downto 0);
-        Uart_We : out std_logic;
-        Uart_Stb : out std_logic;
-        Uart_Cyc : out std_logic_vector(0 downto 0);
-        Uart_DatOut : out std_logic_vector(31 downto 0);
-        Uart_Ack : in std_logic;
         Loaded : out std_logic
     );
 end entity WasmFpgaLoader;
@@ -199,8 +192,6 @@ begin
     constant StateBinaryVersion9 : std_logic_vector(7 downto 0) := x"0A";
     constant StateBinaryVersion10 : std_logic_vector(7 downto 0) := x"0B";
     constant StateBinaryVersion11 : std_logic_vector(7 downto 0) := x"0C";
-    constant StateBinaryVersion12 : std_logic_vector(7 downto 0) := x"0D";
-    constant StateBinaryVersion13 : std_logic_vector(7 downto 0) := x"0E";
     constant StateSectionType0 : std_logic_vector(7 downto 0) := x"0F";
     constant StateSectionType1 : std_logic_vector(7 downto 0) := x"10";
     constant StateSectionType2 : std_logic_vector(7 downto 0) := x"11";
@@ -287,7 +278,7 @@ begin
     constant StateReadRam0 : std_logic_vector(7 downto 0) := x"68";
     constant StateReadRam1 : std_logic_vector(7 downto 0) := x"69";
     constant StateReadRam2 : std_logic_vector(7 downto 0) := x"6A";
-    constant StateLoaded : std_logic_vector(7 downto 0) := x"FE";
+    constant StateLoaded0 : std_logic_vector(7 downto 0) := x"80";
     constant StateError : std_logic_vector(7 downto 0) := x"FF";
   begin
     if Rst = '1' then
@@ -324,11 +315,16 @@ begin
       SectionUID <= (others => '0');
       Idx <= (others => '0');
       Address <= (others => '0');
+      Busy <= '0';
       StoreRun <= '0';
       LoadedBuf <= '0';
+      StartFuncIndex <= (others => '0');
       LoaderState <= (others => '0');
       LoaderStateReturn <= (others => '0');
       LoaderStateReturnU32 <= (others => '0');
+      LoaderStateReturnLimits <= (others => '0');
+      LoaderStateReturnTableType <= (others => '0');
+      LoaderStateReturnGlobalType <= (others => '0');
     elsif rising_edge(clk) then
       --
       -- Finished
@@ -366,7 +362,6 @@ begin
         else
           LoaderState <= StateError;
         end if;
-        LoaderState <= StateBinaryVersion6;
       --
       -- WASM binary version
       --
@@ -829,7 +824,7 @@ begin
             LoaderStateReturn <= StateSectionData1;
             LoaderState <= StateReadRam0;
           else
-            LoaderState <= StateLoaded;
+            LoaderState <= StateLoaded0;
           end if;
       elsif (LoaderState = StateSectionData1) then
           -- section size
@@ -846,7 +841,7 @@ begin
             LoaderStateReturnU32 <= StateSectionData4;
             LoaderState <= StateReadU32_0;
           else
-            LoaderStateReturn <= StateLoaded;
+            LoaderStateReturn <= StateLoaded0;
             LoaderState <= StateReadRam0;
           end if;
       elsif (LoaderState = StateSectionData4) then
@@ -865,9 +860,8 @@ begin
       --
       -- Loaded
       --
-      elsif (LoaderState = StateLoaded) then
+      elsif (LoaderState = StateLoaded0) then
         LoadedBuf <= '1';
-        LoaderState <= StateIdle0;
       --
       -- Read globaltype
       --
