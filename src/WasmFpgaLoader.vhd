@@ -36,52 +36,9 @@ entity WasmFpgaLoader is
         Store_Cyc : out std_logic_vector(0 downto 0);
         Loaded : out std_logic
     );
-end entity WasmFpgaLoader;
+end entity;
 
 architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
-
-  component LoaderBlk_WasmFpgaLoader is
-      port (
-        Clk : in std_logic;
-        Rst : in std_logic;
-        Adr : in std_logic_vector(23 downto 0);
-        Sel : in std_logic_vector(3 downto 0);
-        DatIn : in std_logic_vector(31 downto 0);
-        We : in std_logic;
-        Stb : in std_logic;
-        Cyc : in  std_logic_vector(0 downto 0);
-        LoaderBlk_DatOut : out std_logic_vector(31 downto 0);
-        LoaderBlk_Ack : out std_logic;
-        LoaderBlk_Unoccupied_Ack : out std_logic;
-        Run : out std_logic;
-        Loaded : in std_logic;
-        Busy : in std_logic
-      );
-  end component LoaderBlk_WasmFpgaLoader;
-
-  component WasmFpgaLoader_StoreBlk is
-    port (
-        Clk : in std_logic;
-        Rst : in std_logic;
-        Adr : out std_logic_vector(23 downto 0);
-        Sel : out std_logic_vector(3 downto 0);
-        DatIn : out std_logic_vector(31 downto 0);
-        We : out std_logic;
-        Stb : out std_logic;
-        Cyc : out  std_logic_vector(0 downto 0);
-        StoreBlk_DatOut : in std_logic_vector(31 downto 0);
-        StoreBlk_Ack : in std_logic;
-        StoreBlk_Unoccupied_Ack : in std_logic;
-        Operation : in std_logic;
-        Run : in std_logic;
-        Busy : out std_logic;
-        ModuleInstanceUID : in std_logic_vector(31 downto 0);
-        SectionUID : in std_logic_vector(31 downto 0);
-        Idx : in std_logic_vector(31 downto 0);
-        Address_ToBeRead : out std_logic_vector(31 downto 0);
-        Address_Written : in std_logic_vector(31 downto 0)
-    );
-  end component;
 
   signal ReadModuleState : unsigned(7 downto 0);
   signal ReadModuleRun : std_logic;
@@ -1046,7 +1003,7 @@ begin
     end if;
   end process;
 
-  WasmFpgaLoader_StoreBlk_i : WasmFpgaLoader_StoreBlk
+  WasmFpgaLoader_StoreBlk_i : entity work.WasmFpgaLoader_StoreBlk
       port map (
         Clk => Clk,
         Rst => Rst,
@@ -1069,7 +1026,7 @@ begin
         Address_Written => Address
       );
 
-  LoaderBlk_WasmFpgaLoader_i : LoaderBlk_WasmFpgaLoader
+  LoaderBlk_WasmFpgaLoader_i : entity work.LoaderBlk_WasmFpgaLoader
       port map (
         Clk => Clk,
         Rst => Rst,
