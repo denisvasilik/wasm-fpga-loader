@@ -36,7 +36,7 @@ entity WasmFpgaLoader is
         Store_Cyc : out std_logic_vector(0 downto 0);
         Loaded : out std_logic
     );
-end entity;
+end;
 
 architecture WasmFpgaLoaderArchitecture of WasmFpgaLoader is
 
