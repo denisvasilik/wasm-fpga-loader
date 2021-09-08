@@ -283,6 +283,8 @@ begin
       LoaderStateReturnTableType <= (others => '0');
       LoaderStateReturnGlobalType <= (others => '0');
     elsif rising_edge(clk) then
+      -- Avoid implicit latch inference
+      ModuleInstanceUID <= (others => '0');
       --
       -- Finished
       --
