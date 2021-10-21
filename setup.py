@@ -30,45 +30,49 @@ setuptools.setup(
     dependency_links=[],
     package_dir={},
     package_data={},
-    data_files=[
-        ("wasm-fpga-loader/package", ["package/component.xml"]),
-        ("wasm-fpga-loader/package/bd", ["package/bd/bd.tcl"]),
-        ("wasm-fpga-loader/package/xgui", ["package/xgui/wasm_fpga_loader_v1_0.tcl"]),
-        (
-            "wasm-fpga-loader/resources",
-            [
-                "resources/wasm_fpga_loader_header.vhd",
-                "resources/wasm_fpga_loader_direct.vhd",
-                "resources/wasm_fpga_loader_indirect.vhd",
-                "resources/wasm_fpga_loader_wishbone.vhd",
-                "resources/wasm_fpga_store_header.vhd",
-                "resources/wasm_fpga_store_wishbone.vhd",
-            ],
-        ),
-        (
-            "wasm-fpga-loader/ip/WasmFpgaTestBenchRam",
-            ["ip/WasmFpgaTestBenchRam/WasmFpgaTestBenchRam.xci"],
-        ),
-        (
-            "wasm-fpga-loader/src",
-            [
-                "src/WasmFpgaLoader.vhd",
-                "src/WasmFpgaWishbone.vhd"
-            ],
-        ),
-        (
-            "wasm-fpga-loader/tb",
-            [
-                "tb/tb_FileIo.vhd",
-                "tb/tb_pkg_helper.vhd",
-                "tb/tb_pkg.vhd",
-                "tb/tb_std_logic_1164_additions.vhd",
-                "tb/tb_Types.vhd",
-                "tb/tb_WasmFpgaLoader.vhd",
-                "tb/tb_WbRam.vhd",
-            ],
-        ),
-        ("wasm-fpga-loader", ["CHANGELOG.md", "AUTHORS", "LICENSE"]),
+    data_files=[(
+        "wasm-fpga-loader/package", [
+            "package/component.xml"
+        ]),(
+        "wasm-fpga-loader/package/bd", [
+            "package/bd/bd.tcl"
+        ]),(
+        "wasm-fpga-loader/package/xgui", [
+            "package/xgui/wasm_fpga_loader_v1_0.tcl"
+        ]),(
+        "wasm-fpga-loader/resources", [
+            "resources/wasm_fpga_loader_header.vhd",
+            "resources/wasm_fpga_loader_wishbone.vhd",
+            "resources/wasm_fpga_store_header.vhd",
+            "resources/wasm_fpga_store_wishbone.vhd",
+            "resources/debug.coe",
+        ]),(
+        "wasm-fpga-loader/ip/WasmFpgaTestBenchRam", [
+            "ip/WasmFpgaTestBenchRam/WasmFpgaTestBenchRam.xci"
+        ]),(
+        "wasm-fpga-loader/src", [
+            "src/WasmFpgaLoader.vhd",
+            "src/WasmFpgaLoaderPackage.vhd",
+            "src/WasmFpgaWishbone.vhd"
+        ]),(
+        "wasm-fpga-loader/tb", [
+            "tb/tb_FileIo.vhd",
+            "tb/tb_pkg_helper.vhd",
+            "tb/tb_pkg.vhd",
+            "tb/tb_std_logic_1164_additions.vhd",
+            "tb/tb_Types.vhd",
+            "tb/tb_WasmFpgaLoader.vhd",
+            "tb/tb_WbRam.vhd",
+        ]),(
+        'wasm-fpga-loader/simstm', [
+            'simstm/Defines.stm',
+            'simstm/WasmFpgaLoader.stm',
+        ]),(
+        "wasm-fpga-loader", [
+            "CHANGELOG.md",
+            "AUTHORS",
+            "LICENSE"
+        ])
     ],
     setup_requires=[],
     install_requires=[],

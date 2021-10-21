@@ -20,6 +20,7 @@ clean:
 	@find ip ! -iname *.xci -type f -exec rm {} +
 	@rm -rf .Xil vivado*.log vivado*.str vivado*.jou
 	@rm -rf work \
+		dist \
 		src-gen \
 		hxs_gen \
 		*.egg-info \
